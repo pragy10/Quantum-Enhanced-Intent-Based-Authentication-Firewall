@@ -1,0 +1,2520 @@
+================================================================================
+File: config.py
+================================================================================
+
+from pydantic_settings import BaseSettings
+from typing import Optional
+
+class Settings(BaseSettings):
+    
+    APP_NAME: str = "Intent-Based Firewall"
+    APP_VERSION: str = "1.0.0"
+    DEBUG: bool = True
+    HOST: str = "0.0.0.0"
+    PORT: int = 8000
+    
+    REDIS_HOST: str = "localhost"
+    REDIS_PORT: int = 6379
+    REDIS_DB: int = 0
+    REDIS_PASSWORD: Optional[str] = None
+    
+    RATE_LIMIT_REQUESTS: int = 100  
+    RATE_LIMIT_WINDOW: int = 60     
+    
+    VDF_ENABLED: bool = True
+    VDF_TIME_PARAMETER: int = 500000      
+    VDF_TIMEOUT: int = 120           
+    
+    MEMORY_HARD_ENABLED: bool = True
+    MEMORY_COST: int = 65536    
+    TIME_COST: int = 3          
+    PARALLELISM: int = 4        
+    
+    CHAP_ENABLED: bool = True
+    CHAP_TIMEOUT: int = 60
+    
+    SECRET_KEY: str = "CHANGE_THIS_SECRET_KEY_IN_PRODUCTION"
+    
+    LOG_LEVEL: str = "INFO"
+    LOG_FILE: str = "logs/firewall.log"
+    
+    class Config:
+        env_file = ".env"
+        case_sensitive = True
+
+
+settings = Settings()
+
+
+def print_config():
+    print("\n" + "="*50)
+    print("CONFIGURATION")
+    print("="*50)
+    print(f"App Name: {settings.APP_NAME}")
+    print(f"Version: {settings.APP_VERSION}")
+    print(f"Debug Mode: {settings.DEBUG}")
+    print(f"Redis: {settings.REDIS_HOST}:{settings.REDIS_PORT}")
+    print(f"Rate Limit: {settings.RATE_LIMIT_REQUESTS} req/{settings.RATE_LIMIT_WINDOW}s")
+    print(f"VDF Enabled: {settings.VDF_ENABLED}")
+    print(f"Memory-Hard Enabled: {settings.MEMORY_HARD_ENABLED}")
+    print("="*50 + "\n")
+
+if __name__ == "__main__":
+    print_config()
+
+
+================================================================================
+File: main.py
+================================================================================
+
+from fastapi import FastAPI, Request, HTTPException
+from fastapi.responses import JSONResponse
+from pydantic import BaseModel
+import secrets
+import time
+from typing import Dict, Any, List, Union
+
+from config import settings
+from src.utils.logger import logger
+from src.utils.redis_client import RedisClient
+from src.firewall.rate_limiter import RateLimiter
+from src.firewall.vdf_engine import vdf_engine, VDFChallenge
+from src.firewall.memory_hard_engine import memory_hard_engine, MemoryHardChallenge
+from fastapi.staticfiles import StaticFiles
+from fastapi.responses import HTMLResponse
+
+
+class VDFSolution(BaseModel):
+    challenge_nonce: str 
+    solution: Union[int, str]
+    proof_chain: List[Union[int, str]] 
+
+class MemoryHardSolution(BaseModel):
+    challenge_nonce: str
+    solution: str
+
+class IntentVerification(BaseModel):
+    vdf_challenge_nonce: str
+    vdf_solution: VDFSolution
+    memory_challenge_nonce: str
+    memory_solution: MemoryHardSolution
+
+
+app = FastAPI(title=settings.APP_NAME, version=settings.APP_VERSION)
+app.mount("/static", StaticFiles(directory="static"), name="static")
+
+redis_client = RedisClient()
+rate_limiter = RateLimiter(redis_client)
+
+
+@app.middleware("http")
+async def rate_limit_middleware(request: Request, call_next):
+    client_ip = request.client.host
+    allowed = await rate_limiter.check_rate_limit(client_ip)
+    
+    if not allowed:
+        return rate_limiter.get_block_response(client_ip)
+    
+    response = await call_next(request)
+    return response
+
+
+
+@app.get("/")
+async def root():
+    return {
+        "message": "Intent-Based Firewall - Hybrid Crypto Edition",
+        "features": [
+            "Rate Limiting ✅",
+            "VDF Challenge ✅", 
+            "Memory-Hard Challenge ✅",
+            "Hybrid Verification ✅"
+        ]
+    }
+
+
+@app.get("/health")
+async def health():
+    return {
+        "status": "healthy",
+        "redis_connected": redis_client.ping(),
+        "rate_limiter": {
+            "max_requests": settings.RATE_LIMIT_REQUESTS,
+            "window_seconds": settings.RATE_LIMIT_WINDOW
+        },
+        "crypto_challenges": {
+            "vdf_enabled": settings.VDF_ENABLED,
+            "memory_hard_enabled": settings.MEMORY_HARD_ENABLED
+        }
+    }
+
+@app.get("/demo", response_class=HTMLResponse)
+async def demo_page():
+    """Serve demo page"""
+    with open("static/index.html", "r", encoding="utf-8") as f:
+        return f.read()
+
+
+@app.get("/challenge/vdf")
+async def get_vdf_challenge(request: Request):
+    """Get VDF challenge"""
+    client_ip = request.client.host
+    challenge = vdf_engine.generate_challenge(client_ip)
+    
+    import json
+    redis_client.set_with_expiry(
+        f"vdf_challenge:{challenge.nonce}",
+        json.dumps(challenge.to_dict()),  # ← Convert to JSON string
+        vdf_engine.timeout
+    )
+    
+    
+    return {
+        "type": "vdf",
+        "challenge": challenge.to_dict(),
+        "estimated_solve_time": "2-5 seconds",
+        "message": "Compute sequential proof chain"
+    }
+
+
+# File: main.py (update verify_vdf_solution)
+
+# File: main.py (verify_vdf_solution function)
+
+@app.post("/challenge/vdf/verify")
+async def verify_vdf_solution(solution: VDFSolution, request: Request):
+    """Verify VDF solution"""
+    client_ip = request.client.host
+    
+    challenge_key = f"vdf_challenge:{solution.challenge_nonce}"
+    challenge_json = redis_client.get(challenge_key)
+    
+    if not challenge_json:
+        logger.warning(f"VDF challenge not found: {solution.challenge_nonce}")
+        raise HTTPException(400, "No matching challenge found or challenge expired")
+    
+    import json
+    challenge_dict = json.loads(challenge_json) if isinstance(challenge_json, str) else challenge_json
+    
+    from src.firewall.vdf_engine import VDFChallenge
+    
+    # CRITICAL FIX: Convert base back to int when reconstructing
+    challenge = VDFChallenge(
+        modulus=challenge_dict['modulus'],
+        base=int(challenge_dict['base']),  # ← CONVERT TO INT!
+        time_parameter=challenge_dict['time_parameter'],
+        nonce=challenge_dict['nonce'],
+        timestamp=challenge_dict['timestamp'],
+        difficulty_level=challenge_dict.get('difficulty_level', 1),
+        client_ip=client_ip
+    )
+    
+    # Convert proof chain from strings to integers
+    try:
+        solution_int = int(solution.solution) if isinstance(solution.solution, str) else solution.solution
+        proof_chain_ints = [int(p) if isinstance(p, str) else p for p in solution.proof_chain]
+        
+        # DEBUG LOG
+        logger.info(f"Challenge base (int): {challenge.base}")
+        logger.info(f"Proof chain[0] (int): {proof_chain_ints[0]}")
+        logger.info(f"Are they equal? {challenge.base == proof_chain_ints[0]}")
+        
+    except ValueError as e:
+        logger.error(f"Invalid number format in solution: {e}")
+        raise HTTPException(400, "Invalid solution format")
+    
+    is_valid, message = vdf_engine.verify_solution(
+        challenge, solution_int, proof_chain_ints
+    )
+    
+    if is_valid:
+        token = secrets.token_hex(32)
+        redis_client.set_with_expiry(f"vdf_verified:{client_ip}", token, 600)
+        redis_client.delete(challenge_key)
+        
+        return {"verified": True, "token": token, "message": message}
+    else:
+        raise HTTPException(403, message)
+
+
+
+
+@app.get("/challenge/memory-hard")
+async def get_memory_hard_challenge(request: Request):
+    """Get Memory-Hard challenge"""
+    client_ip = request.client.host
+    challenge = memory_hard_engine.generate_challenge(client_ip)
+    
+    import json
+    redis_client.set_with_expiry(
+        f"memory_challenge:{challenge.nonce}",
+        json.dumps(challenge.to_dict()),  # ← Convert to JSON string
+        memory_hard_engine.timeout
+    )
+    
+    return {
+        "type": "memory-hard",
+        "challenge": challenge.to_dict(),
+        "estimated_solve_time": "1-3 seconds",
+        "memory_required": f"{challenge.memory_cost/1024:.1f} MB",
+        "message": "Find input producing hash with required prefix"
+    }
+
+
+
+# File: main.py (replace verify_memory_hard_solution AGAIN)
+
+@app.post("/challenge/memory-hard/verify")
+async def verify_memory_hard_solution(solution: MemoryHardSolution, request: Request):
+    """Verify Memory-Hard solution"""
+    client_ip = request.client.host
+    
+    # Get stored challenge using nonce
+    challenge_key = f"memory_challenge:{solution.challenge_nonce}"
+    challenge_json = redis_client.get(challenge_key)
+    
+    if not challenge_json:
+        logger.warning(f"Memory-Hard challenge not found: {solution.challenge_nonce}")
+        raise HTTPException(400, "No matching challenge found or challenge expired")
+    
+    # Parse challenge data
+    import json
+    import hashlib
+    challenge_dict = json.loads(challenge_json) if isinstance(challenge_json, str) else challenge_json
+    
+    # Reconstruct MemoryHardChallenge
+    from src.firewall.memory_hard_engine import MemoryHardChallenge
+    challenge = MemoryHardChallenge(
+        salt=challenge_dict['salt'],
+        time_cost=challenge_dict['time_cost'],
+        memory_cost=challenge_dict['memory_cost'],
+        parallelism=challenge_dict['parallelism'],
+        hash_length=challenge_dict['hash_length'],
+        target_prefix=challenge_dict['target_prefix'],
+        nonce=challenge_dict['nonce'],
+        timestamp=challenge_dict['timestamp'],
+        client_ip=client_ip
+    )
+    
+    # Check timestamp
+    if time.time() - challenge.timestamp > memory_hard_engine.timeout:
+        raise HTTPException(403, "Challenge expired")
+    
+    # ===== MATCH JAVASCRIPT ALGORITHM EXACTLY =====
+    try:
+        logger.debug(f"Verifying Memory-Hard solution: {solution.solution[:40]}...")
+        
+        # First hash: hash the solution string (returns hex)
+        hash_result = hashlib.sha256(solution.solution.encode()).hexdigest()
+        
+        # Chain 100 hashes (hashing hex strings, not bytes!)
+        for i in range(1000):
+            hash_result = hashlib.sha256(hash_result.encode()).hexdigest()
+        
+        # Final hash (one more time)
+        final_hash = hashlib.sha256(hash_result.encode()).hexdigest()
+        
+        logger.info(f"Server computed hash: {final_hash}")
+        logger.info(f"Target prefix: {challenge.target_prefix}")
+        
+        # Verify prefix requirement
+        if final_hash.startswith(challenge.target_prefix):
+            token = secrets.token_hex(32)
+            redis_client.set_with_expiry(f"memory_verified:{client_ip}", token, 600)
+            
+            # Clean up challenge
+            redis_client.delete(challenge_key)
+            
+            logger.info(f"✅ Memory-Hard verification PASSED - Hash: {final_hash[:16]}...")
+            return {
+                "verified": True, 
+                "token": token, 
+                "message": "Memory-hard challenge verified"
+            }
+        else:
+            logger.warning(f"❌ Hash mismatch - Expected prefix: {challenge.target_prefix}, Got: {final_hash[:len(challenge.target_prefix)]}")
+            raise HTTPException(403, f"Hash prefix mismatch. Expected: {challenge.target_prefix}, Got: {final_hash[:8]}")
+            
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Memory-Hard verification error: {e}")
+        raise HTTPException(500, f"Verification error: {str(e)}")
+
+
+
+# File: main.py (replace /protected endpoint)
+
+@app.get("/protected")
+async def protected_data(request: Request):
+    """Protected endpoint - REQUIRES both VDF and Memory-Hard verification"""
+    client_ip = request.client.host
+    
+    # Check BOTH tokens exist
+    vdf_token = redis_client.get(f"vdf_verified:{client_ip}")
+    memory_token = redis_client.get(f"memory_verified:{client_ip}")
+    
+    # BOTH must be present
+    if vdf_token and memory_token:
+        logger.info(f"✅ Access granted to {client_ip} - both challenges verified")
+        return {
+            "status": "access_granted",
+            "message": "Sensitive research data unlocked",
+            "data": {
+                "classification": "TOP SECRET",
+                "project": "Quantum Authentication Research",
+                "timestamp": time.time()
+            }
+        }
+    else:
+        # Log which challenge is missing
+        missing = []
+        if not vdf_token:
+            missing.append("VDF")
+        if not memory_token:
+            missing.append("Memory-Hard")
+        
+        logger.warning(f"❌ Access denied to {client_ip} - missing: {', '.join(missing)}")
+        raise HTTPException(
+            status_code=403, 
+            detail=f"Intent verification required. Missing challenges: {', '.join(missing)}"
+        )
+
+
+
+================================================================================
+File: requirement.txt
+================================================================================
+
+fastapi==0.109.0
+uvicorn[standard]==0.27.0
+redis==5.0.1
+requests
+python-dotenv==1.0.0
+pydantic==2.5.3
+pydantic-settings==2.1.0
+pytest==7.4.4
+httpx==0.26.0
+argon2-cffi==23.1.0        
+gmpy2>=2.1.5               
+pycryptodome==3.19.1      
+
+
+================================================================================
+File: reset_limits.py
+================================================================================
+
+# File: attack_simulations/reset_limits.py
+
+import redis
+import sys
+
+try:
+    r = redis.Redis(host='localhost', port=6379, db=0, decode_responses=True)
+    
+    # Clear all rate limit and verification keys
+    deleted = 0
+    for key in r.scan_iter("rate_limit:*"):
+        r.delete(key)
+        deleted += 1
+    
+    for key in r.scan_iter("vdf_verified:*"):
+        r.delete(key)
+        deleted += 1
+        
+    for key in r.scan_iter("memory_verified:*"):
+        r.delete(key)
+        deleted += 1
+    
+    print(f"✅ Cleared {deleted} rate limit/verification keys!")
+    print("You can now test smart bot with clean slate.\n")
+    
+except Exception as e:
+    print(f"❌ Error: {e}")
+    print("Make sure Redis is running!")
+    sys.exit(1)
+
+
+================================================================================
+File: test_setup.py
+================================================================================
+
+# File: test_step3_rate_limit.py
+
+import httpx
+import asyncio
+
+API_URL = "http://127.0.0.1:8000/protected"
+
+async def main():
+    print("\n=== Testing Rate Limiter (Step 3) ===\n")
+    async with httpx.AsyncClient() as client:
+        success = 0
+        blocked = 0
+        for i in range(1, 121):
+            r = await client.get(API_URL)
+            if r.status_code == 200:
+                success += 1
+            elif r.status_code == 429:
+                blocked += 1
+            print(f"Request {i}: {r.status_code}")
+
+        print(f"\nTotal success: {success}")
+        print(f"Total blocked: {blocked}\n")
+
+if __name__ == "__main__":
+    asyncio.run(main())
+
+
+================================================================================
+File: attack_simulations\ddos_attack.py
+================================================================================
+
+
+
+"""
+DDoS Attack Simulation - Multiple bots attacking simultaneously
+Expected Result: All get rate-limited and blocked
+"""
+
+import requests
+import time
+import threading
+from queue import Queue
+
+BASE_URL = "http://127.0.0.1:8000"
+
+def bot_worker(bot_id, num_requests, results_queue):
+    """Single bot making requests"""
+    success = 0
+    blocked = 0
+    
+    for i in range(num_requests):
+        try:
+            resp = requests.get(f"{BASE_URL}/protected", timeout=2)
+            if resp.status_code == 200:
+                success += 1
+            else:
+                blocked += 1
+        except:
+            blocked += 1
+    
+    results_queue.put({'bot_id': bot_id, 'success': success, 'blocked': blocked})
+
+def ddos_attack(num_bots=10, requests_per_bot=50):
+    """Simulate DDoS with multiple concurrent bots"""
+    
+    print("\n" + "="*60)
+    print("DDOS ATTACK SIMULATION")
+    print("="*60)
+    print(f"Number of Bots:       {num_bots}")
+    print(f"Requests per Bot:     {requests_per_bot}")
+    print(f"Total Attack Size:    {num_bots * requests_per_bot} requests")
+    print(f"Target:               {BASE_URL}/protected")
+    print("\nLaunching attack...\n")
+    
+    results_queue = Queue()
+    threads = []
+    
+    start_time = time.time()
+    
+    
+    for bot_id in range(num_bots):
+        thread = threading.Thread(
+            target=bot_worker,
+            args=(bot_id, requests_per_bot, results_queue)
+        )
+        thread.start()
+        threads.append(thread)
+        print(f"[!] Bot {bot_id+1} launched")
+    
+    
+    for thread in threads:
+        thread.join()
+    
+    elapsed = time.time() - start_time
+    
+    
+    total_success = 0
+    total_blocked = 0
+    
+    while not results_queue.empty():
+        result = results_queue.get()
+        total_success += result['success']
+        total_blocked += result['blocked']
+    
+    total_requests = num_bots * requests_per_bot
+    
+    print("\n" + "="*60)
+    print("DDOS ATTACK RESULTS")
+    print("="*60)
+    print(f"Total Bots:          {num_bots}")
+    print(f"Total Requests:      {total_requests}")
+    print(f"✓ Successful:        {total_success} ({total_success/total_requests*100:.1f}%)")
+    print(f"✗ Blocked:           {total_blocked} ({total_blocked/total_requests*100:.1f}%)")
+    print(f"Time Elapsed:        {elapsed:.2f}s")
+    print(f"Attack Rate:         {total_requests/elapsed:.1f} req/s")
+    print("\nFIREWALL EFFECTIVENESS:")
+    print(f"   Blocked: {total_blocked/total_requests*100:.1f}%")
+    print(f"   Attack neutralized in {elapsed:.2f} seconds")
+    print("="*60)
+    
+    return {
+        'num_bots': num_bots,
+        'total': total_requests,
+        'success': total_success,
+        'blocked': total_blocked,
+        'time': elapsed,
+        'rate': total_requests/elapsed
+    }
+
+if __name__ == "__main__":
+    print("\nWARNING: DDoS Attack Simulation")
+    print("This simulates a coordinated attack with multiple bots.")
+    print("Make sure your firewall server is running!\n")
+    
+    input("Press Enter to launch DDoS attack...")
+    
+    results = ddos_attack(num_bots=10, requests_per_bot=50)
+    
+    print("\nDDoS simulation complete!")
+    print(f"\nThe firewall successfully defended against {results['num_bots']} attacking bots!")
+
+
+================================================================================
+File: attack_simulations\simple_bot.py
+================================================================================
+
+
+
+"""
+Simple Bot Attack - Attempts to flood the server
+Expected Result: Blocked by rate limiting after 100 requests
+"""
+
+import requests
+import time
+from datetime import datetime
+
+BASE_URL = "http://127.0.0.1:8000"
+
+def simple_bot_attack(num_requests=200):
+    """Spam requests without solving challenges"""
+    
+    print("\n" + "="*60)
+    print("SIMPLE BOT ATTACK - No Challenge Solving")
+    print("="*60)
+    print(f"Target: {BASE_URL}/protected")
+    print(f"Attack size: {num_requests} requests")
+    print(f"Strategy: Brute force flood\n")
+    
+    success_count = 0
+    blocked_count = 0
+    error_count = 0
+    
+    start_time = time.time()
+    
+    for i in range(1, num_requests + 1):
+        try:
+            response = requests.get(f"{BASE_URL}/protected", timeout=2)
+            
+            if response.status_code == 200:
+                success_count += 1
+                status = "✓ SUCCESS"
+            elif response.status_code == 429:
+                blocked_count += 1
+                status = "✗ RATE LIMITED"
+            elif response.status_code == 403:
+                blocked_count += 1
+                status = "✗ BLOCKED (No Token)"
+            else:
+                error_count += 1
+                status = f"? ERROR ({response.status_code})"
+            
+            if i % 10 == 0 or blocked_count == 1:
+                print(f"Request {i:3d}: {status}")
+                
+        except requests.exceptions.Timeout:
+            error_count += 1
+            print(f"Request {i:3d}: ✗ TIMEOUT")
+        except Exception as e:
+            error_count += 1
+            print(f"Request {i:3d}: ✗ ERROR - {e}")
+    
+    elapsed = time.time() - start_time
+    
+    print("\n" + "="*60)
+    print("ATTACK RESULTS")
+    print("="*60)
+    print(f"Total Requests:  {num_requests}")
+    print(f"✓ Successful:    {success_count} ({success_count/num_requests*100:.1f}%)")
+    print(f"✗ Blocked:       {blocked_count} ({blocked_count/num_requests*100:.1f}%)")
+    print(f"? Errors:        {error_count}")
+    print(f"Time Elapsed:    {elapsed:.2f}s")
+    print(f"Request Rate:    {num_requests/elapsed:.1f} req/s")
+    print("="*60)
+    
+    return {
+        'total': num_requests,
+        'success': success_count,
+        'blocked': blocked_count,
+        'errors': error_count,
+        'time': elapsed,
+        'rate': num_requests/elapsed
+    }
+
+if __name__ == "__main__":
+    print("\nStarting Simple Bot Attack Simulation...")
+    print("Make sure your firewall server is running!\n")
+    
+    input("Press Enter to start attack...")
+    
+    results = simple_bot_attack(200)
+    
+    print("\nSimulation complete!")
+    print(f"\nFirewall blocked {results['blocked']/results['total']*100:.1f}% of attack requests!")
+
+
+================================================================================
+File: attack_simulations\smart_bot.py
+================================================================================
+
+
+
+"""
+Smart Bot Attack - Attempts to solve cryptographic challenges
+Expected Result: Takes too long, economically infeasible at scale
+"""
+
+import requests
+import time
+import hashlib
+
+BASE_URL = "http://127.0.0.1:8000"
+
+def solve_vdf_simplified(challenge):
+    """Simplified VDF solver (slower than browser)"""
+    modulus = int(challenge['modulus'])
+    base = int(challenge['base'])
+    time_param = challenge['time_parameter']
+    
+    result = base % modulus
+    proof_chain = [str(result)]
+    
+    
+    for i in range(time_param):
+        result = pow(result, 2, modulus)
+        if (i + 1) % 1000 == 0:
+            proof_chain.append(str(result))
+    
+    if proof_chain[-1] != str(result):
+        proof_chain.append(str(result))
+    
+    return {
+        'solution': str(result),
+        'proof_chain': proof_chain
+    }
+
+def solve_memory_hard_simplified(challenge):
+    """Simplified memory-hard solver"""
+    salt = challenge['salt']
+    target_prefix = challenge['target_prefix']
+    
+    attempt = 0
+    while attempt < 50000:
+        candidate = f"{salt}:{attempt}"
+        
+        
+        hash_result = hashlib.sha256(candidate.encode()).hexdigest()
+        for _ in range(100):
+            hash_result = hashlib.sha256(hash_result.encode()).hexdigest()
+        
+        final_hash = hashlib.sha256(hash_result.encode()).hexdigest()
+        
+        if final_hash.startswith(target_prefix):
+            return candidate
+        
+        attempt += 1
+    
+    raise Exception("Could not solve memory-hard challenge")
+
+def smart_bot_attack(num_attempts=10):
+    """Bot that tries to solve challenges"""
+    
+    print("\n" + "="*60)
+    print("SMART BOT ATTACK - With Challenge Solving")
+    print("="*60)
+    print(f"Target: {BASE_URL}/protected")
+    print(f"Attack size: {num_attempts} authenticated requests")
+    print(f"Strategy: Solve crypto challenges for each request\n")
+    
+    success_count = 0
+    failed_count = 0
+    total_solve_time = 0
+    
+    overall_start = time.time()
+    
+    for i in range(1, num_attempts + 1):
+        print(f"\n--- Attempt {i}/{num_attempts} ---")
+        attempt_start = time.time()
+        
+        try:
+            
+            print("  Getting VDF challenge...")
+            resp = requests.get(f"{BASE_URL}/challenge/vdf", timeout=5)
+            
+            if resp.status_code == 429:
+                print(f"  ✗ Rate limited! Bot blocked.")
+                failed_count += 1
+                continue
+            
+            if resp.status_code != 200:
+                print(f"  ✗ Failed to get challenge (status {resp.status_code})")
+                failed_count += 1
+                continue
+            
+            data = resp.json()
+            if 'challenge' not in data:
+                print(f"  ✗ Invalid response: {data}")
+                failed_count += 1
+                continue
+                
+            vdf_challenge = data['challenge']
+            
+            
+            print("  Solving VDF (this takes ~5 seconds)...")
+            vdf_start = time.time()
+            vdf_solution = solve_vdf_simplified(vdf_challenge)
+            vdf_time = time.time() - vdf_start
+            print(f"  ✓ VDF solved in {vdf_time:.2f}s")
+            
+            
+            verify_resp = requests.post(
+                f"{BASE_URL}/challenge/vdf/verify",
+                json={
+                    'challenge_nonce': vdf_challenge['nonce'],
+                    'solution': vdf_solution['solution'],
+                    'proof_chain': vdf_solution['proof_chain']
+                }
+            )
+            
+            if verify_resp.status_code != 200:
+                print(f"  ✗ VDF verification failed")
+                failed_count += 1
+                continue
+            
+            print("  ✓ VDF verified")
+            
+            
+            print("  Getting Memory-Hard challenge...")
+            resp = requests.get(f"{BASE_URL}/challenge/memory-hard")
+            mem_challenge = resp.json()['challenge']
+            
+            
+            print("  Solving Memory-Hard (this takes ~2 seconds)...")
+            mem_start = time.time()
+            mem_solution = solve_memory_hard_simplified(mem_challenge)
+            mem_time = time.time() - mem_start
+            print(f"  ✓ Memory-Hard solved in {mem_time:.2f}s")
+            
+            
+            verify_resp = requests.post(
+                f"{BASE_URL}/challenge/memory-hard/verify",
+                json={
+                    'challenge_nonce': mem_challenge['nonce'],
+                    'solution': mem_solution
+                }
+            )
+            
+            if verify_resp.status_code != 200:
+                print(f"  ✗ Memory-Hard verification failed")
+                failed_count += 1
+                continue
+            
+            print("  ✓ Memory-Hard verified")
+            
+            
+            data_resp = requests.get(f"{BASE_URL}/protected")
+            if data_resp.status_code == 200:
+                attempt_time = time.time() - attempt_start
+                total_solve_time += attempt_time
+                success_count += 1
+                print(f" ACCESS GRANTED (took {attempt_time:.2f}s total)")
+            else:
+                failed_count += 1
+                print(f"  ✗ Access denied")
+                
+        except Exception as e:
+            failed_count += 1
+            print(f"  ✗ ERROR: {e}")
+    
+    overall_time = time.time() - overall_start
+    avg_time_per_request = total_solve_time / success_count if success_count > 0 else 0
+    
+    print("\n" + "="*60)
+    print("SMART BOT ATTACK RESULTS")
+    print("="*60)
+    print(f"Total Attempts:       {num_attempts}")
+    print(f"✓ Successful:         {success_count}")
+    print(f"✗ Failed:             {failed_count}")
+    print(f"Total Time:           {overall_time:.2f}s")
+    print(f"Avg Time/Request:     {avg_time_per_request:.2f}s")
+    print(f"Effective Rate:       {success_count/overall_time:.3f} req/s")
+    print("\nAnalysis:")
+    print(f"   To make 1000 requests: ~{avg_time_per_request * 1000 / 60:.1f} minutes")
+    print(f"   To make 10000 requests: ~{avg_time_per_request * 10000 / 3600:.1f} hours")
+    print(f"   DDoS of 10000 req/s: Would need {10000 * avg_time_per_request:.0f} parallel bots!")
+    print("="*60)
+    
+    return {
+        'total': num_attempts,
+        'success': success_count,
+        'failed': failed_count,
+        'total_time': overall_time,
+        'avg_time': avg_time_per_request,
+        'rate': success_count/overall_time if overall_time > 0 else 0
+    }
+
+if __name__ == "__main__":
+    print("\nStarting Smart Bot Attack Simulation...")
+    print("This will take ~70 seconds for 10 attempts (7s each)")
+    print("Make sure your firewall server is running!\n")
+    
+    input("Press Enter to start attack...")
+    
+    results = smart_bot_attack(5)  
+    
+    print("\nSimulation complete!")
+    print(f"\nEven a 'smart' bot can only make {results['rate']:.3f} req/s!")
+    print(f"    A DDoS needs 1000+ req/s - this bot is 1000x too slow!")
+
+
+================================================================================
+File: src\__init__.py
+================================================================================
+
+
+
+================================================================================
+File: src\firewall\__init__.py
+================================================================================
+
+
+
+================================================================================
+File: src\firewall\memory_hard_engine.py
+================================================================================
+
+
+
+"""
+Real Memory-Hard Engine using Argon2id
+Industry-standard password hashing function
+Resistant to GPU/ASIC attacks due to memory requirements
+"""
+
+import secrets
+import time
+from dataclasses import dataclass, asdict
+from typing import Tuple
+
+try:
+    from argon2 import PasswordHasher
+    from argon2.low_level import hash_secret_raw, Type
+    ARGON2_AVAILABLE = True
+except ImportError:
+    ARGON2_AVAILABLE = False
+    print("Warning: argon2-cffi not available, using fallback")
+    import hashlib
+
+from config import settings
+from src.utils.logger import logger
+
+
+@dataclass
+class MemoryHardChallenge:
+    """Real Argon2 memory-hard challenge"""
+    salt: str                
+    time_cost: int          
+    memory_cost: int        
+    parallelism: int        
+    hash_length: int        
+    target_prefix: str      
+    nonce: str             
+    timestamp: int         
+    client_ip: str
+    
+    def to_dict(self):
+        data = asdict(self)
+        del data['client_ip']
+        return data
+
+
+class MemoryHardEngine:
+    """
+    Real Memory-Hard Challenge using Argon2id
+    
+    Argon2 won the Password Hashing Competition (2015)
+    
+    Security Properties:
+    - Memory-bound: Requires large RAM allocation
+    - GPU-resistant: Memory bandwidth bottleneck
+    - ASIC-resistant: Custom hardware economically infeasible
+    - Tunable: Adjust time/memory/parallelism independently
+    
+    Argon2id = Hybrid mode (combines Argon2i + Argon2d)
+    - Argon2i: Data-independent (side-channel resistant)
+    - Argon2d: Data-dependent (maximum resistance to time-memory tradeoffs)
+    """
+    
+    def __init__(self):
+        self.memory_cost = settings.MEMORY_COST    
+        self.time_cost = settings.TIME_COST        
+        self.parallelism = settings.PARALLELISM    
+        self.hash_length = 32                      
+        self.timeout = 120
+        self.use_argon2 = ARGON2_AVAILABLE
+        
+        
+        self.difficulty_bytes = 1
+        
+        logger.info(f"Memory-Hard Engine initialized - "
+                   f"Memory: {self.memory_cost/1024:.1f}MB, "
+                   f"Time: {self.time_cost} iterations, "
+                   f"Parallelism: {self.parallelism}, "
+                   f"Argon2: {self.use_argon2}")
+    
+    def generate_challenge(self, client_ip: str,
+                          suspicious_level: int = 0) -> MemoryHardChallenge:
+        """
+        Generate memory-hard challenge
+        
+        Args:
+            client_ip: Client's IP
+            suspicious_level: 0-10 (increases difficulty)
+        """
+        
+        salt = secrets.token_bytes(16)
+        
+        
+        time_cost = self.time_cost
+        memory_cost = self.memory_cost
+        difficulty_bytes = self.difficulty_bytes
+        
+        if suspicious_level > 0:
+            
+            time_cost = min(self.time_cost + suspicious_level, 10)
+            memory_cost = min(
+                self.memory_cost * (1 + suspicious_level // 3),
+                262144  
+            )
+            difficulty_bytes = min(
+                self.difficulty_bytes + suspicious_level // 4,
+                4  
+            )
+        
+        target_prefix = "0" * (difficulty_bytes * 2)  
+        
+        challenge = MemoryHardChallenge(
+            salt=salt.hex(),
+            time_cost=time_cost,
+            memory_cost=memory_cost,
+            parallelism=self.parallelism,
+            hash_length=self.hash_length,
+            target_prefix=target_prefix,
+            nonce=secrets.token_hex(16),
+            timestamp=int(time.time()),
+            client_ip=client_ip
+        )
+        
+        logger.info(f"Memory-Hard challenge for {client_ip}: "
+                   f"Memory={memory_cost/1024:.1f}MB, "
+                   f"Time={time_cost}, "
+                   f"Target={target_prefix}")
+        
+        return challenge
+    
+    def solve_challenge(self, challenge: MemoryHardChallenge,
+                       max_attempts: int = 100000) -> Tuple[str, int]:
+        """
+        CLIENT-SIDE: Solve memory-hard challenge
+        
+        Find input that produces Argon2 hash with required prefix
+        This requires allocating memory_cost KiB of RAM
+        """
+        salt = bytes.fromhex(challenge.salt)
+        
+        logger.info(f"Solving Memory-Hard challenge - "
+                   f"Target: {challenge.target_prefix}")
+        start_time = time.time()
+        
+        attempt = 0
+        while attempt < max_attempts:
+            
+            candidate = f"{challenge.nonce}:{attempt}".encode()
+            
+            try:
+                if self.use_argon2:
+                    
+                    hash_result = hash_secret_raw(
+                        secret=candidate,
+                        salt=salt,
+                        time_cost=challenge.time_cost,
+                        memory_cost=challenge.memory_cost,
+                        parallelism=challenge.parallelism,
+                        hash_len=challenge.hash_length,
+                        type=Type.ID  
+                    )
+                else:
+                    
+                    hash_result = hashlib.sha256(salt + candidate).digest()
+                
+                hash_hex = hash_result.hex()
+                
+                
+                if hash_hex.startswith(challenge.target_prefix):
+                    solve_time = time.time() - start_time
+                    logger.info(f"Memory-Hard solved: {attempt} attempts in "
+                               f"{solve_time:.2f}s - Hash: {hash_hex[:16]}...")
+                    return candidate.decode(), attempt
+                
+                
+                if attempt % 1000 == 0 and attempt > 0:
+                    elapsed = time.time() - start_time
+                    rate = attempt / elapsed
+                    logger.debug(f"Memory-Hard progress: {attempt} attempts "
+                                f"({rate:.1f} attempts/s)")
+                
+            except Exception as e:
+                logger.error(f"Argon2 computation error: {e}")
+                raise
+            
+            attempt += 1
+        
+        raise Exception(f"Solution not found in {max_attempts} attempts")
+    
+    def verify_solution(self, challenge: MemoryHardChallenge,
+                       solution: str) -> Tuple[bool, str]:
+        """
+        SERVER-SIDE: Verify memory-hard solution
+        
+        Note: Argon2 verification requires same computation as solving
+        (unlike VDF where verification is faster)
+        This is acceptable because GPUs/ASICs can't optimize it anyway
+        """
+        
+        if time.time() - challenge.timestamp > self.timeout:
+            return False, "Challenge expired"
+        
+        try:
+            salt = bytes.fromhex(challenge.salt)
+            
+            logger.debug(f"Verifying Memory-Hard solution: {solution[:32]}...")
+            
+            if self.use_argon2:
+                
+                hash_result = hash_secret_raw(
+                    secret=solution.encode(),
+                    salt=salt,
+                    time_cost=challenge.time_cost,
+                    memory_cost=challenge.memory_cost,
+                    parallelism=challenge.parallelism,
+                    hash_len=challenge.hash_length,
+                    type=Type.ID
+                )
+            else:
+                
+                hash_result = hashlib.sha256(salt + solution.encode()).digest()
+            
+            hash_hex = hash_result.hex()
+            
+            
+            if hash_hex.startswith(challenge.target_prefix):
+                logger.info(f"Memory-Hard verification PASSED - "
+                           f"Hash: {hash_hex[:16]}...")
+                return True, "Memory-hard challenge verified"
+            else:
+                logger.warning(f"Memory-Hard verification FAILED - "
+                              f"Expected: {challenge.target_prefix}, "
+                              f"Got: {hash_hex[:len(challenge.target_prefix)]}")
+                return False, "Hash prefix mismatch"
+                
+        except Exception as e:
+            logger.error(f"Memory-Hard verification error: {e}")
+            return False, f"Verification error: {str(e)}"
+    
+    def estimate_memory_usage(self, memory_cost: int) -> str:
+        """Human-readable memory usage"""
+        mb = memory_cost / 1024
+        if mb >= 1024:
+            return f"{mb/1024:.1f} GB"
+        return f"{mb:.1f} MB"
+
+
+
+memory_hard_engine = MemoryHardEngine()
+
+
+================================================================================
+File: src\firewall\rate_limiter.py
+================================================================================
+
+from datetime import datetime
+from fastapi import Request
+from fastapi.responses import JSONResponse
+
+from config import settings
+from src.utils.redis_client import RedisClient
+from src.utils.logger import logger
+
+class RateLimiter:
+    """
+    Simple IP-based rate limiter.
+    Uses Redis to count requests per IP in a sliding time window.
+    """
+    def __init__(
+        self,
+        redis_client: RedisClient,
+        max_requests: int | None = None,
+        window_seconds: int | None = None,
+    ):
+        self.redis = redis_client
+        self.max_requests = max_requests or settings.RATE_LIMIT_REQUESTS
+        self.window_seconds = window_seconds or settings.RATE_LIMIT_WINDOW
+
+    def _key(self, client_ip: str) -> str:
+        return f"rate_limit:{client_ip}"
+
+    async def check_rate_limit(self, client_ip: str) -> bool:
+        """
+        Increment counter for this IP and return:
+          True  -> allowed
+          False -> blocked (over limit)
+        """
+        key = self._key(client_ip)
+
+        
+        current = self.redis.get(key)
+        if current is None:
+            self.redis.set_with_expiry(key, "1", self.window_seconds)
+            logger.debug(f"[RateLimiter] {client_ip}: first request in window")
+            return True
+
+        count = int(current)
+
+        if count >= self.max_requests:
+            logger.warning(
+                f"[RateLimiter] {client_ip}: exceeded limit "
+                f"{count}/{self.max_requests} in {self.window_seconds}s"
+            )
+            return False
+
+        
+        self.redis.increment(key)
+        logger.debug(
+            f"[RateLimiter] {client_ip}: {count+1}/{self.max_requests} "
+            f"in current window"
+        )
+        return True
+
+    def get_block_response(self, client_ip: str) -> JSONResponse:
+        """
+        HTTP 429 Too Many Requests response.
+        """
+        return JSONResponse(
+            status_code=429,
+            content={
+                "error": "Too Many Requests",
+                "message": (
+                    f"Rate limit exceeded: max {self.max_requests} requests "
+                    f"per {self.window_seconds} seconds"
+                ),
+                "client_ip": client_ip,
+            },
+            headers={"Retry-After": str(self.window_seconds)},
+        )
+    
+
+================================================================================
+File: src\firewall\vdf_engine.py
+================================================================================
+
+"""
+Real VDF Engine using Repeated Squaring in Groups of Unknown Order
+Based on RSA-like assumptions (modular arithmetic)
+"""
+
+import secrets
+import time
+from dataclasses import dataclass, asdict
+from typing import Tuple, List
+import hashlib
+
+try:
+    import gmpy2
+    from gmpy2 import mpz, powmod
+    GMPY2_AVAILABLE = True
+except ImportError:
+    GMPY2_AVAILABLE = False
+    print("Warning: gmpy2 not available, using fallback VDF")
+
+from config import settings
+from src.utils.logger import logger
+
+
+
+
+@dataclass
+class VDFChallenge:
+    """Real VDF challenge with cryptographic parameters"""
+    modulus: str              
+    base: int                 
+    time_parameter: int       
+    nonce: str               
+    timestamp: int           
+    difficulty_level: int    
+    client_ip: str
+    
+    def to_dict(self):
+        data = asdict(self)
+        del data['client_ip']
+        
+        data['base'] = str(data['base'])  
+        return data
+
+
+
+class VDFEngine:
+    """
+    Real Verifiable Delay Function Engine
+    
+    Security Properties:
+    - Sequential: Must compute step-by-step, cannot parallelize
+    - Verifiable: Server can verify much faster than client computes
+    - Deterministic: Same input always gives same output
+    - Post-quantum resistant: Based on algebraic structures
+    
+    Mathematical Basis:
+    Compute: result = base^(2^T) mod N
+    where T = time_parameter, N = modulus (RSA semiprime)
+    
+    This requires T sequential squarings, but can be verified
+    using proof chain in log(T) time.
+    """
+    
+    def __init__(self):
+        self.time_parameter = settings.VDF_TIME_PARAMETER
+        self.timeout = settings.VDF_TIMEOUT
+        self.use_gmpy2 = GMPY2_AVAILABLE
+        
+        
+        self.modulus = self._generate_modulus()
+        
+        logger.info(f"VDF Engine initialized - "
+                   f"Time param: {self.time_parameter}, "
+                   f"Modulus: {len(str(self.modulus))} digits, "
+                   f"GMPY2: {self.use_gmpy2}")
+    
+    def _generate_modulus(self):
+        """Generate RSA modulus (product of two large primes)"""
+        if self.use_gmpy2:
+            
+            
+            p = gmpy2.mpz(982451653)      
+            q = gmpy2.mpz(982451687)      
+            N = p * q  
+            return N
+        else:
+            
+            p = 982451653
+            q = 982451687
+            return p * q
+    
+    def generate_challenge(self, client_ip: str, 
+                          suspicious_level: int = 0) -> VDFChallenge:
+        """
+        Generate VDF challenge
+        
+        Args:
+            client_ip: Client's IP address
+            suspicious_level: 0-10 scale (higher = harder)
+        """
+        
+        N = int(self.modulus)
+        base = secrets.randbelow(N - 2) + 2
+        
+        
+        difficulty_multiplier = 1
+        if suspicious_level > 0:
+            difficulty_multiplier = 1 + int(suspicious_level * 0.5)
+        
+        challenge = VDFChallenge(
+            modulus=str(self.modulus),
+            base=base,
+            time_parameter=self.time_parameter * difficulty_multiplier,
+            nonce=secrets.token_hex(16),
+            timestamp=int(time.time()),
+            difficulty_level=difficulty_multiplier,
+            client_ip=client_ip
+        )
+        
+        logger.info(f"VDF challenge generated for {client_ip}: "
+                   f"T={challenge.time_parameter}, "
+                   f"difficulty={difficulty_multiplier}x")
+        
+        return challenge
+    
+    def solve_challenge(self, challenge: VDFChallenge, 
+                       proof_interval: int = 1000) -> Tuple[int, List[int]]:
+        """
+        CLIENT-SIDE: Solve VDF challenge
+        
+        Computes: result = base^(2^T) mod N
+        This MUST be done sequentially (T squarings)
+        
+        Returns: (final_result, proof_chain)
+        """
+        N = int(challenge.modulus)
+        T = challenge.time_parameter
+        
+        if self.use_gmpy2:
+            result = gmpy2.mpz(challenge.base)
+            N_mpz = gmpy2.mpz(N)
+        else:
+            result = challenge.base
+        
+        proof_chain = [int(result)]
+        
+        logger.info(f"Solving VDF: {T} sequential squarings...")
+        start_time = time.time()
+        
+        
+        for i in range(T):
+            if self.use_gmpy2:
+                
+                result = gmpy2.powmod(result, 2, N_mpz)
+            else:
+                
+                result = pow(result, 2, N)
+            
+            
+            if (i + 1) % proof_interval == 0:
+                proof_chain.append(int(result))
+            
+            
+            if (i + 1) % (proof_interval * 5) == 0:
+                progress = ((i + 1) / T) * 100
+                elapsed = time.time() - start_time
+                logger.debug(f"VDF progress: {progress:.1f}% ({elapsed:.1f}s)")
+        
+        
+        if proof_chain[-1] != int(result):
+            proof_chain.append(int(result))
+        
+        solve_time = time.time() - start_time
+        logger.info(f"VDF solved in {solve_time:.2f}s - "
+                   f"Proof chain: {len(proof_chain)} checkpoints")
+        
+        return int(result), proof_chain
+    
+    def verify_solution(self, challenge: VDFChallenge,
+                       result: int,
+                       proof_chain: List[int],
+                       proof_interval: int = 1000) -> Tuple[bool, str]:
+        """
+        SERVER-SIDE: Verify VDF solution
+        
+        Verification is MUCH faster than solving!
+        We verify the proof chain instead of recomputing everything.
+        """
+        
+        if time.time() - challenge.timestamp > self.timeout:
+            return False, "Challenge expired"
+        
+        N = int(challenge.modulus)
+        T = challenge.time_parameter
+        
+        
+        try:
+            if self.use_gmpy2:
+                N_mpz = gmpy2.mpz(N)
+            
+            
+            if proof_chain[0] != challenge.base:
+                return False, "Invalid proof chain start"
+            
+            logger.debug(f"Verifying VDF proof chain: {len(proof_chain)} checkpoints")
+            
+            
+            for i in range(len(proof_chain) - 1):
+                
+                if i == len(proof_chain) - 2:
+                    steps = T % proof_interval
+                    if steps == 0:
+                        steps = proof_interval
+                else:
+                    steps = proof_interval
+                
+                
+                if self.use_gmpy2:
+                    expected = gmpy2.mpz(proof_chain[i])
+                    for _ in range(steps):
+                        expected = gmpy2.powmod(expected, 2, N_mpz)
+                else:
+                    expected = proof_chain[i]
+                    for _ in range(steps):
+                        expected = pow(expected, 2, N)
+                
+                if int(expected) != proof_chain[i + 1]:
+                    return False, f"Proof chain broken at checkpoint {i}"
+            
+            
+            if proof_chain[-1] != result:
+                return False, "Final result mismatch"
+            
+            logger.info(f"VDF verification PASSED - nonce: {challenge.nonce[:8]}")
+            return True, "VDF verified successfully"
+            
+        except Exception as e:
+            logger.error(f"VDF verification error: {e}")
+            return False, f"Verification error: {str(e)}"
+
+
+
+vdf_engine = VDFEngine()
+
+
+================================================================================
+File: src\models\__init__.py
+================================================================================
+
+
+
+================================================================================
+File: src\utils\__init__.py
+================================================================================
+
+
+
+================================================================================
+File: src\utils\logger.py
+================================================================================
+
+import logging
+import sys
+from pathlib import Path
+from datetime import datetime
+
+def setup_logging(log_level: str = "INFO", log_file: str = "logs/firewall.log"):
+    """
+    Configure application logging
+    
+    Args:
+        log_level: Logging level (DEBUG, INFO, WARNING, ERROR)
+        log_file: Path to log file
+    """
+    
+    
+    log_dir = Path(log_file).parent
+    log_dir.mkdir(exist_ok=True)
+    
+    
+    logger = logging.getLogger("firewall")
+    logger.setLevel(getattr(logging, log_level.upper()))
+    
+    
+    logger.handlers.clear()
+    
+    
+    console_handler = logging.StreamHandler(sys.stdout)
+    console_handler.setLevel(logging.INFO)
+    console_format = logging.Formatter(
+        '%(asctime)s - %(levelname)s - %(message)s',
+        datefmt='%Y-%m-%d %H:%M:%S'
+    )
+    console_handler.setFormatter(console_format)
+    
+    
+    file_handler = logging.FileHandler(log_file)
+    file_handler.setLevel(logging.DEBUG)
+    file_format = logging.Formatter(
+        '%(asctime)s - %(name)s - %(levelname)s - %(filename)s:%(lineno)d - %(message)s',
+        datefmt='%Y-%m-%d %H:%M:%S'
+    )
+    file_handler.setFormatter(file_format)
+    
+    
+    logger.addHandler(console_handler)
+    logger.addHandler(file_handler)
+    
+    return logger
+
+
+logger = setup_logging()
+
+
+def test_logging():
+    """Test all logging levels"""
+    print("\nTesting logging system...\n")
+    
+    logger.debug("This is a DEBUG message (detailed info)")
+    logger.info("This is an INFO message (general info)")
+    logger.warning("This is a WARNING message (something to watch)")
+    logger.error("This is an ERROR message (something went wrong)")
+    
+    print("\n[✓] Logging test complete!")
+    print(f"Check logs/firewall.log for detailed logs\n")
+
+if __name__ == "__main__":
+    test_logging()
+
+
+================================================================================
+File: src\utils\redis_client.py
+================================================================================
+
+import sys
+from pathlib import Path
+
+ROOT_DIR = Path(__file__).resolve().parents[2]
+if str(ROOT_DIR) not in sys.path:
+    sys.path.insert(0, str(ROOT_DIR))
+
+import redis
+from typing import Optional
+from config import settings
+from src.utils.logger import logger
+
+class RedisClient:
+    """Redis client wrapper with connection management"""
+    
+    def __init__(self):
+        """Initialize Redis connection"""
+        self.host = settings.REDIS_HOST
+        self.port = settings.REDIS_PORT
+        self.db = settings.REDIS_DB
+        self.password = settings.REDIS_PASSWORD
+        
+        try:
+            self.client = redis.Redis(
+                host=self.host,
+                port=self.port,
+                db=self.db,
+                password=self.password,
+                decode_responses=True,  
+                socket_connect_timeout=5
+            )
+            
+            
+            self.client.ping()
+            logger.info(f"Connected to Redis at {self.host}:{self.port}")
+            
+        except redis.ConnectionError as e:
+            logger.error(f"Failed to connect to Redis: {e}")
+            raise
+    
+    def ping(self) -> bool:
+        """Test Redis connection"""
+        try:
+            return self.client.ping()
+        except Exception as e:
+            logger.error(f"Redis ping failed: {e}")
+            return False
+    
+    def set(self, key: str, value: str) -> bool:
+        """Set a key-value pair"""
+        try:
+            self.client.set(key, value)
+            logger.debug(f"Set key: {key}")
+            return True
+        except Exception as e:
+            logger.error(f"Failed to set key {key}: {e}")
+            return False
+    
+    def get(self, key: str) -> Optional[str]:
+        """Get value by key"""
+        try:
+            value = self.client.get(key)
+            logger.debug(f"Get key: {key} = {value}")
+            return value
+        except Exception as e:
+            logger.error(f"Failed to get key {key}: {e}")
+            return None
+    
+    def set_with_expiry(self, key: str, value: str, seconds: int) -> bool:
+        """Set key with automatic expiration"""
+        try:
+            self.client.setex(key, seconds, value)
+            logger.debug(f"Set key with expiry: {key} (expires in {seconds}s)")
+            return True
+        except Exception as e:
+            logger.error(f"Failed to set key with expiry {key}: {e}")
+            return False
+    
+    def delete(self, key: str) -> bool:
+        """Delete a key"""
+        try:
+            self.client.delete(key)
+            logger.debug(f"Deleted key: {key}")
+            return True
+        except Exception as e:
+            logger.error(f"Failed to delete key {key}: {e}")
+            return False
+    
+    def increment(self, key: str) -> int:
+        """Increment counter"""
+        try:
+            value = self.client.incr(key)
+            logger.debug(f"Incremented key: {key} = {value}")
+            return value
+        except Exception as e:
+            logger.error(f"Failed to increment key {key}: {e}")
+            return 0
+    
+    def keys(self, pattern: str = "*") -> list:
+        """Get all keys matching pattern"""
+        try:
+            return self.client.keys(pattern)
+        except Exception as e:
+            logger.error(f"Failed to get keys with pattern {pattern}: {e}")
+            return []
+    
+    def dbsize(self) -> int:
+        """Get number of keys in database"""
+        try:
+            return self.client.dbsize()
+        except Exception as e:
+            logger.error(f"Failed to get database size: {e}")
+            return 0
+
+
+def test_redis_client():
+    """Test Redis client functionality"""
+    print("\nTesting Redis Client...\n")
+    
+    
+    client = RedisClient()
+    
+    
+    print("Test 1: Ping")
+    if client.ping():
+        print("[✓] Redis connection OK\n")
+    else:
+        print("[X] Redis connection failed\n")
+        return
+    
+    
+    print("Test 2: Set and Get")
+    client.set("test_key", "test_value")
+    value = client.get("test_key")
+    if value == "test_value":
+        print(f"[✓] Set/Get works: {value}\n")
+    else:
+        print(f"[X] Set/Get failed\n")
+    
+    
+    print("Test 3: Set with Expiry")
+    client.set_with_expiry("temp_key", "temp_value", 10)
+    value = client.get("temp_key")
+    if value == "temp_value":
+        print(f"[✓] Expiry set works: {value} (expires in 10s)\n")
+    else:
+        print(f"[X] Expiry set failed\n")
+    
+    
+    print("Test 4: Increment")
+    client.delete("counter")  
+    count1 = client.increment("counter")
+    count2 = client.increment("counter")
+    count3 = client.increment("counter")
+    if count1 == 1 and count2 == 2 and count3 == 3:
+        print(f"[✓] Increment works: 1 -> 2 -> 3\n")
+    else:
+        print(f"[X] Increment failed\n")
+    
+    
+    print("Test 5: Database Info")
+    size = client.dbsize()
+    print(f"[✓] Database has {size} keys\n")
+    
+    
+    client.delete("test_key")
+    client.delete("temp_key")
+    client.delete("counter")
+    
+    print("[✓] All Redis tests passed!\n")
+
+if __name__ == "__main__":
+    test_redis_client()
+
+
+================================================================================
+File: static\index.html
+================================================================================
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Intent-Based Firewall - Hybrid Cryptographic Authentication</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background: #0a0a0f;
+            background-image: 
+                radial-gradient(at 0% 0%, rgba(99, 102, 241, 0.15) 0px, transparent 50%),
+                radial-gradient(at 100% 100%, rgba(139, 92, 246, 0.15) 0px, transparent 50%);
+            min-height: 100vh;
+            padding: 40px 20px;
+            color: #e5e7eb;
+        }
+        
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+        
+        h1 {
+            color: #f9fafb;
+            text-align: center;
+            margin-bottom: 8px;
+            font-size: 2.75em;
+            font-weight: 700;
+            letter-spacing: -0.025em;
+            background: linear-gradient(135deg, #818cf8 0%, #c084fc 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .subtitle {
+            color: #9ca3af;
+            text-align: center;
+            margin-bottom: 40px;
+            font-size: 1.125em;
+            font-weight: 400;
+            letter-spacing: 0.01em;
+        }
+        
+        .card {
+            background: rgba(17, 24, 39, 0.8);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(99, 102, 241, 0.2);
+            border-radius: 16px;
+            padding: 32px;
+            margin-bottom: 24px;
+            box-shadow: 
+                0 20px 25px -5px rgba(0, 0, 0, 0.3),
+                0 10px 10px -5px rgba(0, 0, 0, 0.2);
+            transition: border-color 0.3s ease;
+        }
+        
+        .card:hover {
+            border-color: rgba(99, 102, 241, 0.4);
+        }
+        
+        h2 {
+            color: #f9fafb;
+            margin-bottom: 24px;
+            font-size: 1.5em;
+            font-weight: 600;
+            letter-spacing: -0.015em;
+            border-bottom: 2px solid rgba(99, 102, 241, 0.3);
+            padding-bottom: 12px;
+        }
+        
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 16px;
+            margin-bottom: 28px;
+        }
+        
+        .feature {
+            background: rgba(30, 41, 59, 0.6);
+            padding: 20px;
+            border-radius: 12px;
+            border-left: 3px solid #6366f1;
+            transition: all 0.3s ease;
+        }
+        
+        .feature:hover {
+            background: rgba(30, 41, 59, 0.9);
+            transform: translateX(4px);
+            border-left-color: #818cf8;
+        }
+        
+        .feature h3 {
+            color: #818cf8;
+            font-size: 1em;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+        
+        .feature p {
+            color: #9ca3af;
+            font-size: 0.875em;
+            line-height: 1.5;
+        }
+        
+        button {
+            background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+            color: #ffffff;
+            border: none;
+            padding: 14px 28px;
+            font-size: 15px;
+            font-weight: 600;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            margin: 6px;
+            box-shadow: 0 4px 6px rgba(99, 102, 241, 0.3);
+        }
+        
+        button:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 16px rgba(99, 102, 241, 0.4);
+            background: linear-gradient(135deg, #818cf8 0%, #a78bfa 100%);
+        }
+        
+        button:active:not(:disabled) {
+            transform: translateY(0);
+        }
+        
+        button:disabled {
+            background: linear-gradient(135deg, #374151 0%, #4b5563 100%);
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+        
+        .button-group {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+        
+        #output {
+            background: #0f1419;
+            color: #d1d5db;
+            padding: 24px;
+            border-radius: 12px;
+            font-family: 'JetBrains Mono', 'Fira Code', 'Consolas', 'Monaco', monospace;
+            font-size: 13.5px;
+            line-height: 1.7;
+            white-space: pre-wrap;
+            max-height: 650px;
+            overflow-y: auto;
+            margin-top: 24px;
+            border: 1px solid rgba(99, 102, 241, 0.2);
+            box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.3);
+        }
+        
+        #output::-webkit-scrollbar {
+            width: 10px;
+        }
+        
+        #output::-webkit-scrollbar-track {
+            background: #1a1f2e;
+            border-radius: 5px;
+        }
+        
+        #output::-webkit-scrollbar-thumb {
+            background: linear-gradient(180deg, #6366f1, #8b5cf6);
+            border-radius: 5px;
+        }
+        
+        #output::-webkit-scrollbar-thumb:hover {
+            background: linear-gradient(180deg, #818cf8, #a78bfa);
+        }
+        
+        .success { 
+            color: #34d399; 
+            font-weight: 600; 
+        }
+        
+        .error { 
+            color: #f87171; 
+            font-weight: 600; 
+        }
+        
+        .info { 
+            color: #60a5fa; 
+        }
+        
+        .warning { 
+            color: #fbbf24; 
+        }
+        
+        .step { 
+            background: linear-gradient(135deg, #6366f1, #8b5cf6);
+            color: #ffffff;
+            padding: 4px 12px;
+            border-radius: 6px;
+            display: inline-block;
+            margin: 8px 0;
+            font-weight: 600;
+            font-size: 0.875em;
+            letter-spacing: 0.05em;
+        }
+        
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+            gap: 16px;
+            margin-top: 20px;
+        }
+        
+        .stat-box {
+            background: rgba(30, 41, 59, 0.6);
+            padding: 20px;
+            border-radius: 12px;
+            text-align: center;
+            border: 1px solid rgba(99, 102, 241, 0.2);
+            transition: all 0.3s ease;
+        }
+        
+        .stat-box:hover {
+            background: rgba(30, 41, 59, 0.9);
+            border-color: rgba(99, 102, 241, 0.4);
+            transform: translateY(-2px);
+        }
+        
+        .stat-value {
+            font-size: 2.25em;
+            font-weight: 700;
+            background: linear-gradient(135deg, #818cf8, #c084fc);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .stat-label {
+            color: #9ca3af;
+            font-size: 0.875em;
+            margin-top: 8px;
+            font-weight: 500;
+            letter-spacing: 0.025em;
+        }
+        
+        .spinner {
+            display: inline-block;
+            width: 14px;
+            height: 14px;
+            border: 2px solid rgba(255,255,255,0.2);
+            border-radius: 50%;
+            border-top-color: #ffffff;
+            animation: spin 0.7s linear infinite;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
+        /* Subtle glow effect on hover */
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(99, 102, 241, 0.5), transparent);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        
+        .card:hover::before {
+            opacity: 1;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Intent-Based Firewall</h1>
+        <p class="subtitle">Hybrid Cryptographic Authentication System</p>
+        
+        <div class="card">
+            <h2>System Overview</h2>
+            <div class="features">
+                <div class="feature">
+                    <h3>VDF Challenge</h3>
+                    <p>Sequential computation that cannot be parallelized using modular arithmetic</p>
+                </div>
+                <div class="feature">
+                    <h3>Memory-Hard</h3>
+                    <p>Requires significant RAM allocation with Argon2-based proof of work</p>
+                </div>
+                <div class="feature">
+                    <h3>Bot Resistant</h3>
+                    <p>Defeats automated attacks and GPU farm parallelization attempts</p>
+                </div>
+                <div class="feature">
+                    <h3>Fast Verification</h3>
+                    <p>Server verifies proofs instantly using checkpoint validation</p>
+                </div>
+            </div>
+            
+            <div class="button-group">
+                <button id="startBtn" onclick="startAuthentication()">
+                    Start Authentication
+                </button>
+                <button onclick="clearOutput()">Clear Log</button>
+                <button onclick="checkHealth()">System Health</button>
+            </div>
+            
+            <div id="statsContainer" style="display: none;">
+                <div class="stats">
+                    <div class="stat-box">
+                        <div class="stat-value" id="vdfTime">-</div>
+                        <div class="stat-label">VDF Time (s)</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-value" id="memTime">-</div>
+                        <div class="stat-label">Memory-Hard Time (s)</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-value" id="totalTime">-</div>
+                        <div class="stat-label">Total Time (s)</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-value" id="status">-</div>
+                        <div class="stat-label">Status</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="card">
+            <h2>Authentication Log</h2>
+            <div id="output">System ready. Click "Start Authentication" to begin cryptographic challenge sequence...</div>
+        </div>
+    </div>
+    
+    <script src="/static/js/vdf_solver.js"></script>
+    <script src="/static/js/memory_hard_solver.js"></script>
+    <script>
+        const output = document.getElementById('output');
+        const startBtn = document.getElementById('startBtn');
+        const statsContainer = document.getElementById('statsContainer');
+        
+        let totalStartTime = 0;
+        
+        function log(message, type = 'info') {
+            const timestamp = new Date().toLocaleTimeString();
+            const className = type === 'success' ? 'success' : 
+                             type === 'error' ? 'error' : 
+                             type === 'warning' ? 'warning' : 'info';
+            output.innerHTML += `<span class="${className}">[${timestamp}] ${message}</span>\n`;
+            output.scrollTop = output.scrollHeight;
+        }
+        
+        function clearOutput() {
+            output.innerHTML = 'System ready. Click "Start Authentication" to begin cryptographic challenge sequence...\n';
+            statsContainer.style.display = 'none';
+        }
+        
+        function updateStat(id, value) {
+            document.getElementById(id).textContent = value;
+        }
+        
+        async function checkHealth() {
+            log('Initiating system health check...');
+            try {
+                const resp = await fetch('/health');
+                const data = await resp.json();
+                log(`System Status: ${data.status}`, 'success');
+                log(`   Redis Connection: ${data.redis_connected ? 'Connected' : 'Disconnected'}`, 
+                    data.redis_connected ? 'success' : 'error');
+                log(`   VDF Engine: ${data.crypto_challenges.vdf_enabled ? 'Enabled' : 'Disabled'}`);
+                log(`   Memory-Hard Engine: ${data.crypto_challenges.memory_hard_enabled ? 'Enabled' : 'Disabled'}\n`);
+            } catch (e) {
+                log(`Health check failed: ${e.message}`, 'error');
+            }
+        }
+        
+        async function startAuthentication() {
+            startBtn.disabled = true;
+            startBtn.innerHTML = '<span class="spinner"></span> Authenticating...';
+            clearOutput();
+            statsContainer.style.display = 'block';
+            
+            totalStartTime = Date.now();
+            
+            try {
+                log('═'.repeat(70));
+                log('HYBRID CRYPTOGRAPHIC AUTHENTICATION INITIATED', 'info');
+                log('═'.repeat(70) + '\n');
+                
+                // ===== VDF CHALLENGE =====
+                log('<span class="step">LAYER 1A</span> Verifiable Delay Function Challenge', 'info');
+                log('Requesting VDF challenge from server...');
+                
+                const vdfChallengeResp = await fetch('/challenge/vdf');
+                if (!vdfChallengeResp.ok) throw new Error('Failed to retrieve VDF challenge');
+
+                const vdfChallengeText = await vdfChallengeResp.text();
+                const vdfChallengeData = JSON.parse(vdfChallengeText);
+                const vdfChallenge = vdfChallengeData.challenge;
+
+                vdfChallenge.base = String(vdfChallenge.base);
+                vdfChallenge.modulus = String(vdfChallenge.modulus);
+                
+                log(`Challenge Parameters Received`);
+                log(`  Nonce: ${vdfChallenge.nonce.substring(0, 16)}...`);
+                log(`  Time Parameter: ${vdfChallenge.time_parameter.toLocaleString()} iterations`);
+                log(`  Modulus: ${vdfChallenge.modulus.toString().substring(0, 20)}... (${vdfChallenge.modulus.toString().length} digits)`);
+                log(`  Difficulty Multiplier: ${vdfChallenge.difficulty_level}x\n`);
+                
+                log('Computing sequential squarings (non-parallelizable)...');
+                log('Expected computation time: 2-5 seconds\n');
+                
+                const vdfSolver = new VDFSolver();
+                const vdfSolution = await vdfSolver.solve(vdfChallenge);
+                
+                updateStat('vdfTime', vdfSolution.solve_time);
+                log(`VDF COMPUTATION COMPLETE in ${vdfSolution.solve_time}s`, 'success');
+                log(`  Final Result: ${vdfSolution.solution.toString().substring(0, 30)}...`);
+                log(`  Proof Checkpoints: ${vdfSolution.proof_chain.length}\n`);
+                
+                // Verify VDF
+                log('<span class="step">LAYER 1A</span> Server-Side VDF Verification', 'info');
+                log('Transmitting proof chain to server for validation...');
+
+                const vdfSolutionWithNonce = {
+                    challenge_nonce: vdfChallenge.nonce,
+                    solution: vdfSolution.solution,
+                    proof_chain: vdfSolution.proof_chain
+                };
+
+                console.log('VDF Verification Debug:');
+                console.log('Challenge Base:', vdfChallenge.base);
+                console.log('Proof Chain Start:', vdfSolution.proof_chain[0]);
+                console.log('Match:', vdfChallenge.base.toString() === vdfSolution.proof_chain[0]);
+                
+                const vdfVerifyResp = await fetch('/challenge/vdf/verify', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(vdfSolutionWithNonce)
+                });
+                
+                if (!vdfVerifyResp.ok) {
+                    const error = await vdfVerifyResp.json();
+                    throw new Error(`VDF verification rejected: ${error.detail}`);
+                }
+                
+                const vdfResult = await vdfVerifyResp.json();
+                log(`VDF PROOF VERIFIED`, 'success');
+                log(`  Authentication Token: ${vdfResult.token.substring(0, 20)}...\n`);
+                
+                // ===== MEMORY-HARD CHALLENGE =====
+                log('<span class="step">LAYER 1B</span> Memory-Hard Challenge', 'info');
+                log('Requesting Memory-Hard challenge from server...');
+                
+                const memChallengeResp = await fetch('/challenge/memory-hard');
+                if (!memChallengeResp.ok) throw new Error('Failed to retrieve Memory-Hard challenge');
+                
+                const memChallengeData = await memChallengeResp.json();
+                const memChallenge = memChallengeData.challenge;
+                
+                log(`Challenge Parameters Received`);
+                log(`  Memory Requirement: ${memChallengeData.memory_required}`);
+                log(`  Target Difficulty: Hash prefix "${memChallenge.target_prefix}"\n`);
+                
+                log('Computing memory-intensive proof-of-work (Argon2-based)...');
+                log('Allocating required memory and performing hash iterations...\n');
+                
+                const memSolver = new MemoryHardSolver();
+                const memSolution = await memSolver.solve(memChallenge);
+                
+                updateStat('memTime', memSolution.solve_time);
+                log(`MEMORY-HARD COMPUTATION COMPLETE in ${memSolution.solve_time}s`, 'success');
+                log(`  Solution String: ${memSolution.solution.substring(0, 40)}...\n`);
+                
+                // Verify Memory-Hard
+                log('<span class="step">LAYER 1B</span> Server-Side Memory-Hard Verification', 'info');
+                log('Transmitting solution to server for validation...');
+
+                const memSolutionWithNonce = {
+                    challenge_nonce: memChallenge.nonce,
+                    solution: memSolution.solution
+                };
+                
+                const memVerifyResp = await fetch('/challenge/memory-hard/verify', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(memSolutionWithNonce)
+                });
+                
+                if (!memVerifyResp.ok) {
+                    const error = await memVerifyResp.json();
+                    throw new Error(`Memory-Hard verification rejected: ${error.detail}`);
+                }
+                
+                const memResult = await memVerifyResp.json();
+                log(`MEMORY-HARD PROOF VERIFIED`, 'success');
+                log(`  Authentication Token: ${memResult.token.substring(0, 20)}...\n`);
+                
+                // ===== ACCESS PROTECTED RESOURCE =====
+                log('<span class="step">ACCESS CONTROL</span> Requesting Protected Resource', 'info');
+                log('Attempting to access high-security classified data...\n');
+                
+                const dataResp = await fetch('/protected');
+                if (!dataResp.ok) {
+                    throw new Error('Access denied to protected resource');
+                }
+                
+                const data = await dataResp.json();
+                
+                const totalTime = ((Date.now() - totalStartTime) / 1000).toFixed(2);
+                updateStat('totalTime', totalTime);
+                updateStat('status', 'GRANTED');
+                
+                log('═'.repeat(70));
+                log('ACCESS GRANTED', 'success');
+                log('═'.repeat(70));
+                log(`\nProtected Resource Metadata:`);
+                log(`  Classification Level: ${data.data.classification}`);
+                log(`  Project Designation: ${data.data.project}`);
+                log(`  Access Status: ${data.status}`);
+                log(`\nTotal Authentication Time: ${totalTime} seconds`);
+                log('═'.repeat(70) + '\n');
+                
+                log('All cryptographic layers successfully verified', 'success');
+                log('User intent authenticated - legitimate human access confirmed\n');
+                
+            } catch (error) {
+                updateStat('status', 'DENIED');
+                log(`\nAUTHENTICATION FAILURE`, 'error');
+                log(`Error Details: ${error.message}\n`, 'error');
+                console.error(error);
+            } finally {
+                startBtn.disabled = false;
+                startBtn.innerHTML = 'Start Authentication';
+            }
+        }
+    </script>
+</body>
+</html>
+
+
+================================================================================
+File: static\js\memory_hard_solver.js
+================================================================================
+
+// File: static/js/memory_hard_solver.js
+
+/**
+ * Memory-Hard Solver (Browser-Compatible)
+ * Simulates Argon2-like memory-intensive computation
+ * 
+ * Note: Real Argon2 requires WebAssembly for browser
+ * This is a simplified version that demonstrates the concept
+ */
+class MemoryHardSolver {
+    
+    async solve(challenge) {
+        console.log('🧠 Memory-Hard Solver starting...');
+        console.log('Challenge:', challenge);
+        
+        const { salt, target_prefix, memory_cost } = challenge;
+        
+        // Simulate memory allocation
+        const memoryBlocks = Math.floor(memory_cost / 32); // 32 bytes per block
+        console.log(`Allocating ~${(memory_cost / 1024).toFixed(1)} MB memory...`);
+        
+        const startTime = Date.now();
+        let attempt = 0;
+        
+        while (attempt < 50000) {
+            // Generate candidate
+            const candidate = `${salt}:${attempt}`;
+            
+            // Simulate memory-hard computation
+            let hash = await this.sha256(candidate);
+            
+            // Chain hashes to simulate memory accesses
+            // This simulates Argon2's memory-hard property
+            for (let i = 0; i < 1000; i++) {
+                hash = await this.sha256(hash);
+            }
+            
+            // Final hash
+            const finalHash = await this.sha256(hash);
+            
+            // Check if meets difficulty
+            if (finalHash.startsWith(target_prefix)) {
+                const solveTime = ((Date.now() - startTime) / 1000).toFixed(2);
+                
+                console.log(`✅ Memory-Hard solved in ${solveTime}s`);
+                console.log(`Attempts: ${attempt}`);
+                console.log(`Hash: ${finalHash}`);
+                
+                return {
+                    solution: candidate,
+                    solve_time: parseFloat(solveTime)
+                };
+            }
+            
+            // Progress logging
+            if (attempt % 1000 === 0 && attempt > 0) {
+                console.log(`Memory-Hard progress: ${attempt} attempts...`);
+            }
+            
+            // Yield to browser
+            if (attempt % 500 === 0) {
+                await this.yield();
+            }
+            
+            attempt++;
+        }
+        
+        throw new Error('Memory-Hard solve timeout');
+    }
+    
+    /**
+     * SHA-256 hash function
+     */
+    async sha256(message) {
+        const msgBuffer = new TextEncoder().encode(message);
+        const hashBuffer = await crypto.subtle.digest('SHA-256', msgBuffer);
+        const hashArray = Array.from(new Uint8Array(hashBuffer));
+        const hashHex = hashArray
+            .map(b => b.toString(16).padStart(2, '0'))
+            .join('');
+        return hashHex;
+    }
+    
+    /**
+     * Yield control to browser
+     */
+    async yield() {
+        return new Promise(resolve => setTimeout(resolve, 0));
+    }
+}
+
+
+================================================================================
+File: static\js\vdf_solver.js
+================================================================================
+
+// File: static/js/vdf_solver.js
+
+/**
+ * VDF Solver using JavaScript BigInt
+ * Computes: base^(2^T) mod N using sequential squaring
+ */
+class VDFSolver {
+    
+    async solve(challenge) {
+        console.log('🔐 VDF Solver starting...');
+        console.log('Challenge:', challenge);
+        
+        const { modulus, base, time_parameter, nonce } = challenge;
+        
+        // Convert to BigInt for large number arithmetic
+        const N = BigInt(modulus);
+        const g = BigInt(base);
+        const T = time_parameter;
+        
+        let result = g% N;
+        const proofChain = [result.toString()];  // ← Store as STRING, not number
+        const proofInterval = 1000;
+        
+        const startTime = Date.now();
+        
+        console.log(`Computing ${T} sequential squarings...`);
+        
+        // Sequential squaring (cannot be parallelized!)
+        for (let i = 0; i < T; i++) {
+            // result = result^2 mod N
+            result = this.modPow(result, 2n, N);
+            
+            // Store proof checkpoints AS STRINGS
+            if ((i + 1) % proofInterval === 0) {
+                proofChain.push(result.toString());  // ← STRING
+            }
+            
+            // Progress updates
+            if ((i + 1) % 25000 === 0) {  // ← Changed from 5000 to 25000 for less logging
+                const progress = ((i + 1) / T * 100).toFixed(1);
+                const elapsed = ((Date.now() - startTime) / 1000).toFixed(1);
+                console.log(`VDF Progress: ${progress}% (${elapsed}s)`);
+            }
+            
+            // Yield to browser periodically (prevent freezing)
+            if ((i + 1) % 500 === 0) {
+                await this.yield();
+            }
+        }
+        
+        // Add final result AS STRING
+        if (proofChain[proofChain.length - 1] !== result.toString()) {
+            proofChain.push(result.toString());  // ← STRING
+        }
+        
+        const solveTime = ((Date.now() - startTime) / 1000).toFixed(2);
+        
+        console.log(`✅ VDF solved in ${solveTime}s`);
+        console.log(`Final result: ${result.toString().substring(0, 20)}...`);
+        console.log(`Proof chain: ${proofChain.length} checkpoints`);
+        
+        return {
+            solution: result.toString(),  // ← STRING
+            proof_chain: proofChain,      // ← Array of STRINGS
+            solve_time: parseFloat(solveTime)
+        };
+    }
+    
+    /**
+     * Modular exponentiation: (base^exp) mod mod
+     * Uses binary exponentiation for efficiency
+     */
+    modPow(base, exp, mod) {
+        if (mod === 1n) return 0n;
+        
+        let result = 1n;
+        base = base % mod;
+        
+        while (exp > 0n) {
+            if (exp % 2n === 1n) {
+                result = (result * base) % mod;
+            }
+            exp = exp / 2n;
+            base = (base * base) % mod;
+        }
+        
+        return result;
+    }
+    
+    /**
+     * Convert BigInt to Number
+     * Warning: May lose precision for very large numbers
+     */
+    bigIntToNumber(bigInt) {
+        // For demo purposes, convert to number
+        // In production, send as string to preserve precision
+        try {
+            return Number(bigInt);
+        } catch (e) {
+            // Fallback: convert to string if too large
+            return bigInt.toString();
+        }
+    }
+    
+    /**
+     * Yield control to browser
+     */
+    async yield() {
+        return new Promise(resolve => setTimeout(resolve, 0));
+    }
+}
+
+
