@@ -1,3 +1,6 @@
 /__pycache__
 *.env
 /myenv
+
+collected_codes.py 
+collected_codes.txt
