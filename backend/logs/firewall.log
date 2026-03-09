@@ -2172,3 +2172,628 @@
 2026-02-23 19:35:43 - firewall - INFO - main.py:253 - Server computed hash: 2934a21829221de4f57a7a6f77649a9efea674d3ef5813d208282ffb598147ff
 2026-02-23 19:35:43 - firewall - INFO - main.py:254 - Target prefix: 00
 2026-02-23 19:35:43 - firewall - WARNING - main.py:271 - [FAILED] Hash mismatch - Expected prefix: 00, Got: 29
+2026-02-23 19:40:27 - firewall - INFO - vdf_engine.py:72 - VDF Engine initialized - Time param: 500000, Modulus: 18 digits, GMPY2: True
+2026-02-23 19:40:27 - firewall - INFO - memory_hard_engine.py:74 - Memory-Hard Engine initialized - Memory: 64.0MB, Time: 3 iterations, Parallelism: 4, Argon2: True
+2026-02-23 19:40:29 - firewall - INFO - redis_client.py:35 - Connected to Redis at localhost:6379
+2026-02-23 19:41:25 - firewall - INFO - vdf_engine.py:120 - VDF challenge generated for 127.0.0.1: T=500000, difficulty=1x
+2026-02-23 19:41:33 - firewall - INFO - vdf_engine.py:72 - VDF Engine initialized - Time param: 500000, Modulus: 18 digits, GMPY2: True
+2026-02-23 19:41:33 - firewall - INFO - main.py:154 - Challenge base (int): 430975513106561497
+2026-02-23 19:41:33 - firewall - INFO - main.py:155 - Proof chain[0] (int): 430975513106561497
+2026-02-23 19:41:33 - firewall - INFO - main.py:156 - Are they equal? True
+2026-02-23 19:41:34 - firewall - INFO - vdf_engine.py:234 - VDF verification PASSED - nonce: 46681857
+2026-02-23 19:41:34 - firewall - INFO - memory_hard_engine.py:123 - Memory-Hard challenge for 127.0.0.1: Memory=64.0MB, Time=3, Target=00
+2026-02-23 19:41:35 - firewall - INFO - memory_hard_engine.py:74 - Memory-Hard Engine initialized - Memory: 64.0MB, Time: 3 iterations, Parallelism: 4, Argon2: True
+2026-02-23 19:41:35 - firewall - INFO - main.py:253 - Server computed hash: 0082a2c25d5f60a9f41ba34e8c09393dedadce61859003185cbbabf9dc20a0a0
+2026-02-23 19:41:35 - firewall - INFO - main.py:254 - Target prefix: 00
+2026-02-23 19:41:35 - firewall - INFO - main.py:264 - [SUCCESS] Memory-Hard verification PASSED - Hash: 0082a2c25d5f60a9...
+2026-02-23 19:41:40 - firewall - INFO - quantum_engine.py:53 - Quantum ZZ Correlation: 1.000, Fidelity: 1.000
+2026-02-23 19:41:43 - firewall - INFO - main.py:341 - [SUCCESS] Access granted to 127.0.0.1 - all layers verified
+2026-02-23 19:42:00 - firewall - INFO - vdf_engine.py:120 - VDF challenge generated for 127.0.0.1: T=500000, difficulty=1x
+2026-02-23 19:42:06 - firewall - INFO - main.py:154 - Challenge base (int): 588957089951905489
+2026-02-23 19:42:06 - firewall - INFO - main.py:155 - Proof chain[0] (int): 588957089951905489
+2026-02-23 19:42:06 - firewall - INFO - main.py:156 - Are they equal? True
+2026-02-23 19:42:06 - firewall - INFO - vdf_engine.py:234 - VDF verification PASSED - nonce: 51cb4eb0
+2026-02-23 19:42:06 - firewall - INFO - memory_hard_engine.py:123 - Memory-Hard challenge for 127.0.0.1: Memory=64.0MB, Time=3, Target=00
+2026-02-23 19:42:08 - firewall - INFO - main.py:253 - Server computed hash: 009ae4e68c4cb664bfd120576e927887774f107d32fef839c2f4923efe432187
+2026-02-23 19:42:08 - firewall - INFO - main.py:254 - Target prefix: 00
+2026-02-23 19:42:08 - firewall - INFO - main.py:264 - [SUCCESS] Memory-Hard verification PASSED - Hash: 009ae4e68c4cb664...
+2026-02-23 19:42:13 - firewall - INFO - quantum_engine.py:53 - Quantum ZZ Correlation: 1.000, Fidelity: 1.000
+2026-02-23 19:42:15 - firewall - INFO - main.py:341 - [SUCCESS] Access granted to 127.0.0.1 - all layers verified
+2026-02-23 19:42:19 - firewall - INFO - vdf_engine.py:120 - VDF challenge generated for 127.0.0.1: T=500000, difficulty=1x
+2026-02-23 19:42:24 - firewall - INFO - main.py:154 - Challenge base (int): 64139006288523883
+2026-02-23 19:42:24 - firewall - INFO - main.py:155 - Proof chain[0] (int): 64139006288523883
+2026-02-23 19:42:24 - firewall - INFO - main.py:156 - Are they equal? True
+2026-02-23 19:42:25 - firewall - INFO - vdf_engine.py:234 - VDF verification PASSED - nonce: fd34c13a
+2026-02-23 19:42:25 - firewall - INFO - memory_hard_engine.py:123 - Memory-Hard challenge for 127.0.0.1: Memory=64.0MB, Time=3, Target=00
+2026-02-23 19:42:30 - firewall - INFO - main.py:253 - Server computed hash: 00c3a0abf9511a431e6d004736d223745b979b5cc59949bf4ebc16371a898f75
+2026-02-23 19:42:30 - firewall - INFO - main.py:254 - Target prefix: 00
+2026-02-23 19:42:30 - firewall - INFO - main.py:264 - [SUCCESS] Memory-Hard verification PASSED - Hash: 00c3a0abf9511a43...
+2026-02-23 19:42:33 - firewall - INFO - quantum_engine.py:53 - Quantum ZZ Correlation: 0.711, Fidelity: 0.711
+2026-02-23 19:42:33 - firewall - WARNING - main.py:327 - Quantum tamper detected for 127.0.0.1. Fidelity: 0.7109375
+2026-02-23 19:42:36 - firewall - INFO - quantum_engine.py:53 - Quantum ZZ Correlation: 1.000, Fidelity: 1.000
+2026-02-23 19:42:38 - firewall - INFO - main.py:341 - [SUCCESS] Access granted to 127.0.0.1 - all layers verified
+2026-02-25 11:56:00 - firewall - INFO - vdf_engine.py:72 - VDF Engine initialized - Time param: 500000, Modulus: 18 digits, GMPY2: False
+2026-02-25 11:56:00 - firewall - INFO - memory_hard_engine.py:74 - Memory-Hard Engine initialized - Memory: 64.0MB, Time: 3 iterations, Parallelism: 4, Argon2: True
+2026-02-25 11:57:45 - firewall - INFO - vdf_engine.py:72 - VDF Engine initialized - Time param: 500000, Modulus: 18 digits, GMPY2: True
+2026-02-25 11:57:45 - firewall - INFO - memory_hard_engine.py:74 - Memory-Hard Engine initialized - Memory: 64.0MB, Time: 3 iterations, Parallelism: 4, Argon2: True
+2026-02-25 11:58:08 - firewall - ERROR - redis_client.py:38 - Failed to connect to Redis: Error 10061 connecting to localhost:6379. No connection could be made because the target machine actively refused it.
+2026-02-25 12:04:59 - firewall - INFO - vdf_engine.py:72 - VDF Engine initialized - Time param: 500000, Modulus: 18 digits, GMPY2: True
+2026-02-25 12:05:00 - firewall - INFO - memory_hard_engine.py:74 - Memory-Hard Engine initialized - Memory: 64.0MB, Time: 3 iterations, Parallelism: 4, Argon2: True
+2026-02-25 12:05:10 - firewall - INFO - redis_client.py:35 - Connected to Redis at localhost:6379
+2026-02-25 12:06:14 - firewall - INFO - vdf_engine.py:72 - VDF Engine initialized - Time param: 500000, Modulus: 18 digits, GMPY2: True
+2026-02-25 12:06:14 - firewall - INFO - memory_hard_engine.py:74 - Memory-Hard Engine initialized - Memory: 64.0MB, Time: 3 iterations, Parallelism: 4, Argon2: True
+2026-02-25 12:06:30 - firewall - INFO - redis_client.py:35 - Connected to Redis at localhost:6379
+2026-02-25 12:06:50 - firewall - INFO - vdf_engine.py:72 - VDF Engine initialized - Time param: 500000, Modulus: 18 digits, GMPY2: True
+2026-02-25 12:06:50 - firewall - INFO - memory_hard_engine.py:74 - Memory-Hard Engine initialized - Memory: 64.0MB, Time: 3 iterations, Parallelism: 4, Argon2: True
+2026-02-25 12:06:53 - firewall - INFO - redis_client.py:35 - Connected to Redis at localhost:6379
+2026-02-25 12:10:55 - firewall - INFO - vdf_engine.py:120 - VDF challenge generated for 127.0.0.1: T=500000, difficulty=1x
+2026-02-25 12:11:00 - firewall - INFO - vdf_engine.py:72 - VDF Engine initialized - Time param: 500000, Modulus: 18 digits, GMPY2: True
+2026-02-25 12:11:00 - firewall - INFO - main.py:154 - Challenge base (int): 873725971157209386
+2026-02-25 12:11:00 - firewall - INFO - main.py:155 - Proof chain[0] (int): 873725971157209386
+2026-02-25 12:11:00 - firewall - INFO - main.py:156 - Are they equal? True
+2026-02-25 12:11:00 - firewall - INFO - vdf_engine.py:234 - VDF verification PASSED - nonce: ef46726f
+2026-02-25 12:11:00 - firewall - INFO - memory_hard_engine.py:123 - Memory-Hard challenge for 127.0.0.1: Memory=64.0MB, Time=3, Target=00
+2026-02-25 12:11:01 - firewall - INFO - memory_hard_engine.py:74 - Memory-Hard Engine initialized - Memory: 64.0MB, Time: 3 iterations, Parallelism: 4, Argon2: True
+2026-02-25 12:11:01 - firewall - INFO - main.py:253 - Server computed hash: 00719078c0516ae1a851a4b5f2f79a8f332ba933360a2cc8468ae365a1a913e5
+2026-02-25 12:11:01 - firewall - INFO - main.py:254 - Target prefix: 00
+2026-02-25 12:11:01 - firewall - INFO - main.py:264 - [SUCCESS] Memory-Hard verification PASSED - Hash: 00719078c0516ae1...
+2026-02-25 12:11:06 - firewall - INFO - quantum_engine.py:53 - Quantum ZZ Correlation: 1.000, Fidelity: 1.000
+2026-02-25 12:11:13 - firewall - INFO - main.py:341 - [SUCCESS] Access granted to 127.0.0.1 - all layers verified
+2026-02-25 12:19:22 - firewall - INFO - vdf_engine.py:120 - VDF challenge generated for 127.0.0.1: T=500000, difficulty=1x
+2026-02-25 12:20:11 - firewall - INFO - main.py:341 - [SUCCESS] Access granted to 127.0.0.1 - all layers verified
+2026-02-25 12:20:11 - firewall - INFO - main.py:341 - [SUCCESS] Access granted to 127.0.0.1 - all layers verified
+2026-02-25 12:20:11 - firewall - INFO - main.py:341 - [SUCCESS] Access granted to 127.0.0.1 - all layers verified
+2026-02-25 12:20:11 - firewall - INFO - main.py:341 - [SUCCESS] Access granted to 127.0.0.1 - all layers verified
+2026-02-25 12:20:11 - firewall - INFO - main.py:341 - [SUCCESS] Access granted to 127.0.0.1 - all layers verified
+2026-02-25 12:20:11 - firewall - INFO - main.py:341 - [SUCCESS] Access granted to 127.0.0.1 - all layers verified
+2026-02-25 12:20:11 - firewall - INFO - main.py:341 - [SUCCESS] Access granted to 127.0.0.1 - all layers verified
+2026-02-25 12:20:11 - firewall - INFO - main.py:341 - [SUCCESS] Access granted to 127.0.0.1 - all layers verified
+2026-02-25 12:20:11 - firewall - INFO - main.py:341 - [SUCCESS] Access granted to 127.0.0.1 - all layers verified
+2026-02-25 12:20:11 - firewall - INFO - main.py:341 - [SUCCESS] Access granted to 127.0.0.1 - all layers verified
+2026-02-25 12:20:11 - firewall - INFO - main.py:341 - [SUCCESS] Access granted to 127.0.0.1 - all layers verified
+2026-02-25 12:20:11 - firewall - INFO - main.py:341 - [SUCCESS] Access granted to 127.0.0.1 - all layers verified
+2026-02-25 12:20:11 - firewall - INFO - main.py:341 - [SUCCESS] Access granted to 127.0.0.1 - all layers verified
+2026-02-25 12:20:11 - firewall - INFO - main.py:341 - [SUCCESS] Access granted to 127.0.0.1 - all layers verified
+2026-02-25 12:20:11 - firewall - INFO - main.py:341 - [SUCCESS] Access granted to 127.0.0.1 - all layers verified
+2026-02-25 12:20:11 - firewall - INFO - main.py:341 - [SUCCESS] Access granted to 127.0.0.1 - all layers verified
+2026-02-25 12:20:11 - firewall - INFO - main.py:341 - [SUCCESS] Access granted to 127.0.0.1 - all layers verified
+2026-02-25 12:20:11 - firewall - INFO - main.py:341 - [SUCCESS] Access granted to 127.0.0.1 - all layers verified
+2026-02-25 12:20:11 - firewall - INFO - main.py:341 - [SUCCESS] Access granted to 127.0.0.1 - all layers verified
+2026-02-25 12:20:11 - firewall - INFO - main.py:341 - [SUCCESS] Access granted to 127.0.0.1 - all layers verified
+2026-02-25 12:20:11 - firewall - INFO - main.py:341 - [SUCCESS] Access granted to 127.0.0.1 - all layers verified
+2026-02-25 12:20:11 - firewall - INFO - main.py:341 - [SUCCESS] Access granted to 127.0.0.1 - all layers verified
+2026-02-25 12:20:11 - firewall - INFO - main.py:341 - [SUCCESS] Access granted to 127.0.0.1 - all layers verified
+2026-02-25 12:20:11 - firewall - INFO - main.py:341 - [SUCCESS] Access granted to 127.0.0.1 - all layers verified
+2026-02-25 12:20:11 - firewall - INFO - main.py:341 - [SUCCESS] Access granted to 127.0.0.1 - all layers verified
+2026-02-25 12:20:11 - firewall - INFO - main.py:341 - [SUCCESS] Access granted to 127.0.0.1 - all layers verified
+2026-02-25 12:20:11 - firewall - INFO - main.py:341 - [SUCCESS] Access granted to 127.0.0.1 - all layers verified
+2026-02-25 12:20:11 - firewall - INFO - main.py:341 - [SUCCESS] Access granted to 127.0.0.1 - all layers verified
+2026-02-25 12:20:11 - firewall - INFO - main.py:341 - [SUCCESS] Access granted to 127.0.0.1 - all layers verified
+2026-02-25 12:20:11 - firewall - INFO - main.py:341 - [SUCCESS] Access granted to 127.0.0.1 - all layers verified
+2026-02-25 12:20:11 - firewall - INFO - main.py:341 - [SUCCESS] Access granted to 127.0.0.1 - all layers verified
+2026-02-25 12:20:11 - firewall - INFO - main.py:341 - [SUCCESS] Access granted to 127.0.0.1 - all layers verified
+2026-02-25 12:20:11 - firewall - INFO - main.py:341 - [SUCCESS] Access granted to 127.0.0.1 - all layers verified
+2026-02-25 12:20:11 - firewall - INFO - main.py:341 - [SUCCESS] Access granted to 127.0.0.1 - all layers verified
+2026-02-25 12:20:11 - firewall - INFO - main.py:341 - [SUCCESS] Access granted to 127.0.0.1 - all layers verified
+2026-02-25 12:20:11 - firewall - INFO - main.py:341 - [SUCCESS] Access granted to 127.0.0.1 - all layers verified
+2026-02-25 12:20:11 - firewall - INFO - main.py:341 - [SUCCESS] Access granted to 127.0.0.1 - all layers verified
+2026-02-25 12:20:11 - firewall - INFO - main.py:341 - [SUCCESS] Access granted to 127.0.0.1 - all layers verified
+2026-02-25 12:20:11 - firewall - INFO - main.py:341 - [SUCCESS] Access granted to 127.0.0.1 - all layers verified
+2026-02-25 12:20:11 - firewall - INFO - main.py:341 - [SUCCESS] Access granted to 127.0.0.1 - all layers verified
+2026-02-25 12:20:11 - firewall - INFO - main.py:341 - [SUCCESS] Access granted to 127.0.0.1 - all layers verified
+2026-02-25 12:20:11 - firewall - INFO - main.py:341 - [SUCCESS] Access granted to 127.0.0.1 - all layers verified
+2026-02-25 12:20:11 - firewall - INFO - main.py:341 - [SUCCESS] Access granted to 127.0.0.1 - all layers verified
+2026-02-25 12:20:11 - firewall - INFO - main.py:341 - [SUCCESS] Access granted to 127.0.0.1 - all layers verified
+2026-02-25 12:20:11 - firewall - INFO - main.py:341 - [SUCCESS] Access granted to 127.0.0.1 - all layers verified
+2026-02-25 12:20:11 - firewall - INFO - main.py:341 - [SUCCESS] Access granted to 127.0.0.1 - all layers verified
+2026-02-25 12:20:11 - firewall - INFO - main.py:341 - [SUCCESS] Access granted to 127.0.0.1 - all layers verified
+2026-02-25 12:20:11 - firewall - INFO - main.py:341 - [SUCCESS] Access granted to 127.0.0.1 - all layers verified
+2026-02-25 12:20:11 - firewall - INFO - main.py:341 - [SUCCESS] Access granted to 127.0.0.1 - all layers verified
+2026-02-25 12:20:11 - firewall - INFO - main.py:341 - [SUCCESS] Access granted to 127.0.0.1 - all layers verified
+2026-02-25 12:20:11 - firewall - INFO - main.py:341 - [SUCCESS] Access granted to 127.0.0.1 - all layers verified
+2026-02-25 12:20:11 - firewall - INFO - main.py:341 - [SUCCESS] Access granted to 127.0.0.1 - all layers verified
+2026-02-25 12:20:11 - firewall - INFO - main.py:341 - [SUCCESS] Access granted to 127.0.0.1 - all layers verified
+2026-02-25 12:20:11 - firewall - INFO - main.py:341 - [SUCCESS] Access granted to 127.0.0.1 - all layers verified
+2026-02-25 12:20:11 - firewall - INFO - main.py:341 - [SUCCESS] Access granted to 127.0.0.1 - all layers verified
+2026-02-25 12:20:11 - firewall - INFO - main.py:341 - [SUCCESS] Access granted to 127.0.0.1 - all layers verified
+2026-02-25 12:20:11 - firewall - INFO - main.py:341 - [SUCCESS] Access granted to 127.0.0.1 - all layers verified
+2026-02-25 12:20:11 - firewall - INFO - main.py:341 - [SUCCESS] Access granted to 127.0.0.1 - all layers verified
+2026-02-25 12:20:11 - firewall - INFO - main.py:341 - [SUCCESS] Access granted to 127.0.0.1 - all layers verified
+2026-02-25 12:20:11 - firewall - INFO - main.py:341 - [SUCCESS] Access granted to 127.0.0.1 - all layers verified
+2026-02-25 12:20:11 - firewall - INFO - main.py:341 - [SUCCESS] Access granted to 127.0.0.1 - all layers verified
+2026-02-25 12:20:11 - firewall - INFO - main.py:341 - [SUCCESS] Access granted to 127.0.0.1 - all layers verified
+2026-02-25 12:20:11 - firewall - INFO - main.py:341 - [SUCCESS] Access granted to 127.0.0.1 - all layers verified
+2026-02-25 12:20:11 - firewall - INFO - main.py:341 - [SUCCESS] Access granted to 127.0.0.1 - all layers verified
+2026-02-25 12:20:11 - firewall - INFO - main.py:341 - [SUCCESS] Access granted to 127.0.0.1 - all layers verified
+2026-02-25 12:20:11 - firewall - INFO - main.py:341 - [SUCCESS] Access granted to 127.0.0.1 - all layers verified
+2026-02-25 12:20:11 - firewall - INFO - main.py:341 - [SUCCESS] Access granted to 127.0.0.1 - all layers verified
+2026-02-25 12:20:11 - firewall - INFO - main.py:341 - [SUCCESS] Access granted to 127.0.0.1 - all layers verified
+2026-02-25 12:20:11 - firewall - INFO - main.py:341 - [SUCCESS] Access granted to 127.0.0.1 - all layers verified
+2026-02-25 12:20:11 - firewall - INFO - main.py:341 - [SUCCESS] Access granted to 127.0.0.1 - all layers verified
+2026-02-25 12:20:11 - firewall - INFO - main.py:341 - [SUCCESS] Access granted to 127.0.0.1 - all layers verified
+2026-02-25 12:20:11 - firewall - INFO - main.py:341 - [SUCCESS] Access granted to 127.0.0.1 - all layers verified
+2026-02-25 12:20:11 - firewall - INFO - main.py:341 - [SUCCESS] Access granted to 127.0.0.1 - all layers verified
+2026-02-25 12:20:11 - firewall - INFO - main.py:341 - [SUCCESS] Access granted to 127.0.0.1 - all layers verified
+2026-02-25 12:20:11 - firewall - INFO - main.py:341 - [SUCCESS] Access granted to 127.0.0.1 - all layers verified
+2026-02-25 12:20:11 - firewall - INFO - main.py:341 - [SUCCESS] Access granted to 127.0.0.1 - all layers verified
+2026-02-25 12:20:11 - firewall - INFO - main.py:341 - [SUCCESS] Access granted to 127.0.0.1 - all layers verified
+2026-02-25 12:20:11 - firewall - INFO - main.py:341 - [SUCCESS] Access granted to 127.0.0.1 - all layers verified
+2026-02-25 12:20:11 - firewall - INFO - main.py:341 - [SUCCESS] Access granted to 127.0.0.1 - all layers verified
+2026-02-25 12:20:11 - firewall - INFO - main.py:341 - [SUCCESS] Access granted to 127.0.0.1 - all layers verified
+2026-02-25 12:20:11 - firewall - INFO - main.py:341 - [SUCCESS] Access granted to 127.0.0.1 - all layers verified
+2026-02-25 12:20:11 - firewall - INFO - main.py:341 - [SUCCESS] Access granted to 127.0.0.1 - all layers verified
+2026-02-25 12:20:11 - firewall - INFO - main.py:341 - [SUCCESS] Access granted to 127.0.0.1 - all layers verified
+2026-02-25 12:20:11 - firewall - INFO - main.py:341 - [SUCCESS] Access granted to 127.0.0.1 - all layers verified
+2026-02-25 12:20:11 - firewall - INFO - main.py:341 - [SUCCESS] Access granted to 127.0.0.1 - all layers verified
+2026-02-25 12:20:11 - firewall - INFO - main.py:341 - [SUCCESS] Access granted to 127.0.0.1 - all layers verified
+2026-02-25 12:20:11 - firewall - INFO - main.py:341 - [SUCCESS] Access granted to 127.0.0.1 - all layers verified
+2026-02-25 12:20:11 - firewall - INFO - main.py:341 - [SUCCESS] Access granted to 127.0.0.1 - all layers verified
+2026-02-25 12:20:11 - firewall - INFO - main.py:341 - [SUCCESS] Access granted to 127.0.0.1 - all layers verified
+2026-02-25 12:20:11 - firewall - INFO - main.py:341 - [SUCCESS] Access granted to 127.0.0.1 - all layers verified
+2026-02-25 12:20:11 - firewall - INFO - main.py:341 - [SUCCESS] Access granted to 127.0.0.1 - all layers verified
+2026-02-25 12:20:11 - firewall - INFO - main.py:341 - [SUCCESS] Access granted to 127.0.0.1 - all layers verified
+2026-02-25 12:20:11 - firewall - INFO - main.py:341 - [SUCCESS] Access granted to 127.0.0.1 - all layers verified
+2026-02-25 12:20:11 - firewall - INFO - main.py:341 - [SUCCESS] Access granted to 127.0.0.1 - all layers verified
+2026-02-25 12:20:11 - firewall - INFO - main.py:341 - [SUCCESS] Access granted to 127.0.0.1 - all layers verified
+2026-02-25 12:20:11 - firewall - INFO - main.py:341 - [SUCCESS] Access granted to 127.0.0.1 - all layers verified
+2026-02-25 12:20:11 - firewall - INFO - main.py:341 - [SUCCESS] Access granted to 127.0.0.1 - all layers verified
+2026-02-25 12:20:11 - firewall - INFO - main.py:341 - [SUCCESS] Access granted to 127.0.0.1 - all layers verified
+2026-02-25 12:20:11 - firewall - INFO - main.py:341 - [SUCCESS] Access granted to 127.0.0.1 - all layers verified
+2026-02-25 12:20:11 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:11 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:11 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:11 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:11 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:11 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:11 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:11 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:11 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:11 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:11 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:11 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:11 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:11 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:11 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:11 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:11 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:11 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:11 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:11 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:11 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:11 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:11 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:11 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:11 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:11 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:11 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:11 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:11 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:11 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:11 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:11 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:11 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:11 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:11 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:11 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:11 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:11 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:11 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:11 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:11 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:11 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:11 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:11 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:11 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:11 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:11 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:11 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:11 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:11 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:11 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:11 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:11 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:11 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:11 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:11 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:11 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:11 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:11 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:11 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:11 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:11 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:11 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:11 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:11 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:11 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:11 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:11 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:11 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:11 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:11 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:11 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:11 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:11 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:11 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:11 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:11 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:11 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:11 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:11 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:11 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:11 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:11 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:11 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:11 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:11 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:11 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:11 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:11 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:11 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:11 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:11 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:11 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:11 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:11 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:11 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:11 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:11 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:11 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:11 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:11 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:11 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:11 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:11 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:11 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:11 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:11 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:11 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:11 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:11 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:11 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:11 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:11 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:11 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:11 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:11 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:11 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:11 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:11 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:11 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:11 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:11 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:11 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:11 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:11 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:11 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:11 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:11 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:11 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:11 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:11 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:11 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:11 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:11 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:11 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:11 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:11 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:11 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:11 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:11 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:11 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:11 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:11 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:11 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:11 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:11 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:11 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:11 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:11 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:11 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:11 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:11 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:12 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:12 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:12 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:12 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:12 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:12 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:12 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:12 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:12 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:12 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:12 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:12 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:12 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:12 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:12 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:12 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:12 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:12 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:12 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:12 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:12 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:12 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:12 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:12 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:12 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:12 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:12 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:12 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:12 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:12 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:12 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:12 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:12 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:12 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:12 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:12 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:12 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:12 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:12 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:12 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:12 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:12 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:12 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:12 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:12 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:12 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:12 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:12 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:12 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:12 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:12 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:12 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:12 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:12 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:12 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:12 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:12 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:12 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:12 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:12 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:12 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:12 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:12 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:12 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:12 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:12 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:12 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:12 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:12 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:12 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:12 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:12 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:12 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:12 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:12 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:12 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:12 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:12 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:12 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:12 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:12 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:12 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:12 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:12 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:12 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:12 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:12 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:12 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:12 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:12 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:12 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:12 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:12 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:12 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:12 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:12 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:12 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:12 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:12 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:12 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:12 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:12 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:12 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:12 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:12 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:12 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:12 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:12 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:12 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:12 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:12 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:12 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:12 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:12 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:12 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:12 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:12 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:12 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:12 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:12 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:12 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:12 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:12 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:12 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:12 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:12 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:12 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:12 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:12 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:12 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:12 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:12 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:12 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:12 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:12 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:12 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:12 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:12 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:12 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:12 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:12 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:12 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:12 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:12 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:12 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:12 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:12 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:12 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:12 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:12 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:12 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:12 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:12 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:12 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:12 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:12 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:12 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:12 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:12 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:12 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:12 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:12 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:12 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:12 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:12 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:12 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:12 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:12 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:12 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:12 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:12 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:12 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:12 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:12 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:12 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:12 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:12 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:12 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:12 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:12 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:12 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:12 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:12 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:12 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:12 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:12 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:12 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:12 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:12 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:12 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:12 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:12 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:12 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:12 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:12 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:12 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:12 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:12 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:12 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:12 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:12 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:12 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:12 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:12 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:12 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:12 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:12 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:12 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:12 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:12 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:12 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:12 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:12 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:12 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:12 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:12 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:12 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:12 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:12 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:12 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:12 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:12 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:12 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:12 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:12 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:12 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:12 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:12 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:12 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:12 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:12 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:12 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:12 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:12 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:12 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:12 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:12 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:12 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:12 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:12 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:12 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:12 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:12 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:12 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:12 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:12 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:12 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:12 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:12 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 12:20:21 - firewall - WARNING - rate_limiter.py:45 - [RateLimiter] 127.0.0.1: exceeded limit 100/100 in 60s
+2026-02-25 15:01:54 - firewall - INFO - vdf_engine.py:72 - VDF Engine initialized - Time param: 500000, Modulus: 18 digits, GMPY2: True
+2026-02-25 15:01:54 - firewall - INFO - memory_hard_engine.py:74 - Memory-Hard Engine initialized - Memory: 64.0MB, Time: 3 iterations, Parallelism: 4, Argon2: True
+2026-02-25 15:02:05 - firewall - INFO - redis_client.py:35 - Connected to Redis at localhost:6379
+2026-02-25 15:02:31 - firewall - INFO - vdf_engine.py:120 - VDF challenge generated for 127.0.0.1: T=500000, difficulty=1x
+2026-02-25 15:05:10 - firewall - WARNING - main.py:129 - VDF challenge not found: 09b81f4661758e0dfbbe214f43d59c2c
+2026-02-25 15:05:30 - firewall - INFO - vdf_engine.py:72 - VDF Engine initialized - Time param: 500000, Modulus: 18 digits, GMPY2: True
+2026-02-25 15:05:30 - firewall - INFO - memory_hard_engine.py:74 - Memory-Hard Engine initialized - Memory: 64.0MB, Time: 3 iterations, Parallelism: 4, Argon2: True
+2026-02-25 15:05:32 - firewall - INFO - redis_client.py:35 - Connected to Redis at localhost:6379
+2026-02-25 15:07:16 - firewall - INFO - vdf_engine.py:120 - VDF challenge generated for 127.0.0.1: T=500000, difficulty=1x
+2026-02-25 15:07:21 - firewall - INFO - vdf_engine.py:72 - VDF Engine initialized - Time param: 500000, Modulus: 18 digits, GMPY2: True
+2026-02-25 15:07:21 - firewall - INFO - main.py:154 - Challenge base (int): 371809192882519967
+2026-02-25 15:07:21 - firewall - INFO - main.py:155 - Proof chain[0] (int): 371809192882519967
+2026-02-25 15:07:21 - firewall - INFO - main.py:156 - Are they equal? True
+2026-02-25 15:07:21 - firewall - INFO - vdf_engine.py:234 - VDF verification PASSED - nonce: 6af36ecb
+2026-02-25 15:07:22 - firewall - INFO - memory_hard_engine.py:123 - Memory-Hard challenge for 127.0.0.1: Memory=64.0MB, Time=3, Target=00
+2026-02-25 15:07:24 - firewall - INFO - memory_hard_engine.py:74 - Memory-Hard Engine initialized - Memory: 64.0MB, Time: 3 iterations, Parallelism: 4, Argon2: True
+2026-02-25 15:07:24 - firewall - INFO - main.py:253 - Server computed hash: 00f517a0455a3579b971995f73daa1450e2a5d514efccff0c2adc93b18101aa6
+2026-02-25 15:07:24 - firewall - INFO - main.py:254 - Target prefix: 00
+2026-02-25 15:07:24 - firewall - INFO - main.py:264 - [SUCCESS] Memory-Hard verification PASSED - Hash: 00f517a0455a3579...
+2026-02-25 15:07:29 - firewall - INFO - quantum_engine.py:53 - Quantum ZZ Correlation: 1.000, Fidelity: 1.000
+2026-02-25 15:10:18 - firewall - INFO - vdf_engine.py:120 - VDF challenge generated for 127.0.0.1: T=500000, difficulty=1x
+2026-02-25 15:10:21 - firewall - INFO - vdf_engine.py:72 - VDF Engine initialized - Time param: 500000, Modulus: 18 digits, GMPY2: True
+2026-02-25 15:10:21 - firewall - INFO - memory_hard_engine.py:74 - Memory-Hard Engine initialized - Memory: 64.0MB, Time: 3 iterations, Parallelism: 4, Argon2: True
+2026-02-25 15:10:26 - firewall - INFO - redis_client.py:35 - Connected to Redis at localhost:6379
+2026-02-25 15:10:26 - firewall - INFO - vdf_engine.py:72 - VDF Engine initialized - Time param: 500000, Modulus: 18 digits, GMPY2: True
+2026-02-25 15:10:26 - firewall - INFO - main.py:154 - Challenge base (int): 534050701186972630
+2026-02-25 15:10:26 - firewall - INFO - main.py:155 - Proof chain[0] (int): 534050701186972630
+2026-02-25 15:10:26 - firewall - INFO - main.py:156 - Are they equal? True
+2026-02-25 15:10:27 - firewall - INFO - vdf_engine.py:234 - VDF verification PASSED - nonce: 45ee85cd
+2026-02-25 15:10:27 - firewall - INFO - memory_hard_engine.py:123 - Memory-Hard challenge for 127.0.0.1: Memory=64.0MB, Time=3, Target=00
+2026-02-25 15:10:30 - firewall - INFO - memory_hard_engine.py:74 - Memory-Hard Engine initialized - Memory: 64.0MB, Time: 3 iterations, Parallelism: 4, Argon2: True
+2026-02-25 15:10:30 - firewall - INFO - main.py:253 - Server computed hash: 000a40855d231ba49a33de1ee543f9f4622047d80c94cc1017d3ab4d526fe222
+2026-02-25 15:10:30 - firewall - INFO - main.py:254 - Target prefix: 00
+2026-02-25 15:10:30 - firewall - INFO - main.py:264 - [SUCCESS] Memory-Hard verification PASSED - Hash: 000a40855d231ba4...
+2026-02-25 15:10:36 - firewall - INFO - quantum_engine.py:52 - Quantum ZZ Correlation: 0.695, Fidelity: 0.695
+2026-02-25 15:10:36 - firewall - WARNING - main.py:327 - Quantum tamper detected for 127.0.0.1. Fidelity: 0.6953125
+2026-02-25 15:12:28 - firewall - INFO - quantum_engine.py:52 - Quantum ZZ Correlation: 1.000, Fidelity: 1.000
+2026-02-25 15:12:38 - firewall - INFO - vdf_engine.py:120 - VDF challenge generated for 127.0.0.1: T=500000, difficulty=1x
+2026-02-25 15:12:43 - firewall - INFO - main.py:154 - Challenge base (int): 318628216409738951
+2026-02-25 15:12:43 - firewall - INFO - main.py:155 - Proof chain[0] (int): 318628216409738951
+2026-02-25 15:12:43 - firewall - INFO - main.py:156 - Are they equal? True
+2026-02-25 15:12:44 - firewall - INFO - vdf_engine.py:234 - VDF verification PASSED - nonce: f7696817
+2026-02-25 15:12:44 - firewall - INFO - memory_hard_engine.py:123 - Memory-Hard challenge for 127.0.0.1: Memory=64.0MB, Time=3, Target=00
+2026-02-25 15:12:47 - firewall - INFO - main.py:253 - Server computed hash: 005502ce878335bea5125e0058782d033cc70522a550c5b7fea33d5aefce1bf2
+2026-02-25 15:12:47 - firewall - INFO - main.py:254 - Target prefix: 00
+2026-02-25 15:12:47 - firewall - INFO - main.py:264 - [SUCCESS] Memory-Hard verification PASSED - Hash: 005502ce878335be...
+2026-02-25 15:16:03 - firewall - INFO - quantum_engine.py:52 - Quantum ZZ Correlation: 0.732, Fidelity: 0.732
+2026-02-25 15:16:03 - firewall - WARNING - main.py:327 - Quantum tamper detected for 127.0.0.1. Fidelity: 0.732421875
+2026-02-25 15:18:53 - firewall - INFO - quantum_engine.py:52 - Quantum ZZ Correlation: 0.693, Fidelity: 0.693
+2026-02-25 15:18:53 - firewall - WARNING - main.py:327 - Quantum tamper detected for 127.0.0.1. Fidelity: 0.693359375
+2026-02-25 15:20:21 - firewall - INFO - vdf_engine.py:72 - VDF Engine initialized - Time param: 500000, Modulus: 18 digits, GMPY2: True
+2026-02-25 15:20:21 - firewall - INFO - memory_hard_engine.py:74 - Memory-Hard Engine initialized - Memory: 64.0MB, Time: 3 iterations, Parallelism: 4, Argon2: True
+2026-02-25 15:20:24 - firewall - INFO - redis_client.py:35 - Connected to Redis at localhost:6379
+2026-02-25 15:20:26 - firewall - INFO - vdf_engine.py:72 - VDF Engine initialized - Time param: 500000, Modulus: 18 digits, GMPY2: True
+2026-02-25 15:20:26 - firewall - INFO - memory_hard_engine.py:74 - Memory-Hard Engine initialized - Memory: 64.0MB, Time: 3 iterations, Parallelism: 4, Argon2: True
+2026-02-25 15:20:29 - firewall - INFO - redis_client.py:35 - Connected to Redis at localhost:6379

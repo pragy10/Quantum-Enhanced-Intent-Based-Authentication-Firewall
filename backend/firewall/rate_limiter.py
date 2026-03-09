@@ -2,7 +2,7 @@ from datetime import datetime
 from fastapi import Request
 from fastapi.responses import JSONResponse
 
-from config import settings
+from backend.config import settings
 from backend.utils.redis_client import RedisClient
 from backend.utils.logger import logger
 

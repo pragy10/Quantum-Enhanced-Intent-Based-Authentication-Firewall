@@ -20,7 +20,7 @@ except ImportError:
     print("Warning: argon2-cffi not available, using fallback")
     import hashlib
 
-from config import settings
+from backend.config import settings
 from backend.utils.logger import logger
 
 

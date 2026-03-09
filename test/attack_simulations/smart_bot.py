@@ -9,7 +9,7 @@ import requests
 import time
 import hashlib
 
-BASE_URL = "http://127.0.0.1:8000"
+BASE_URL = "http://127.0.0.1:5000"
 
 def solve_vdf_simplified(challenge):
     """Simplified VDF solver (slower than browser)"""

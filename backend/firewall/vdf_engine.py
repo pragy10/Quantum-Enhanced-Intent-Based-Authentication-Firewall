@@ -17,7 +17,7 @@ except ImportError:
     GMPY2_AVAILABLE = False
     print("Warning: gmpy2 not available, using fallback VDF")
 
-from config import settings
+from backend.config import settings
 from backend.utils.logger import logger
 
 

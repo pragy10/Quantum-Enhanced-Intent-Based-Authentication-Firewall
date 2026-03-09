@@ -9,7 +9,7 @@ import requests
 import time
 from datetime import datetime
 
-BASE_URL = "http://127.0.0.1:8000"
+BASE_URL = "http://127.0.0.1:5000"
 
 def simple_bot_attack(num_requests=200):
     """Spam requests without solving challenges"""

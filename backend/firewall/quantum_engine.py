@@ -16,7 +16,6 @@ def generate_challenge():
 
 @qml.qnode(dev, shots=1024)
 def quantum_authentication_circuit(phase_angle, tamper=False):
-    # Bell pair preparation
     qml.Hadamard(0)
     qml.CNOT([0, 1])
 

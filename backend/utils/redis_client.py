@@ -7,7 +7,7 @@ if str(ROOT_DIR) not in sys.path:
 
 import redis
 from typing import Optional
-from config import settings
+from backend.config import settings
 from backend.utils.logger import logger
 
 class RedisClient:

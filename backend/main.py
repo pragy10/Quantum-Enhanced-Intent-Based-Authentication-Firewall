@@ -6,13 +6,13 @@ import secrets
 import time
 from typing import Dict, Any, List, Union
 
-from config import settings
-from utils.logger import logger
-from utils.redis_client import RedisClient
-from firewall.rate_limiter import RateLimiter
-from firewall.vdf_engine import vdf_engine, VDFChallenge
-from firewall.memory_hard_engine import memory_hard_engine, MemoryHardChallenge
-from firewall.quantum_engine import quantum_engine
+from backend.config import settings
+from backend.utils.logger import logger
+from backend.utils.redis_client import RedisClient
+from backend.firewall.rate_limiter import RateLimiter
+from backend.firewall.vdf_engine import vdf_engine, VDFChallenge
+from backend.firewall.memory_hard_engine import memory_hard_engine, MemoryHardChallenge
+from backend.firewall.quantum_engine import quantum_engine
 
 
 class VDFSolution(BaseModel):
